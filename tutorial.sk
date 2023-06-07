@@ -1,0 +1,129 @@
+options:
+    c : &6[&e시스템&6]&f
+
+variables:
+    {튜토단계.%player%} = 0
+
+command /튜토단계초기화:
+    trigger:
+        if player is op:
+            set {튜토단계.%player%} to 0
+
+command /튜토가이드:
+	trigger:
+		if player is op:
+			execute op command "/npc create &6가이드"
+			wait 20 tick
+			execute op command "/npc skin %player%"
+			message "{@c} 가이드가 생성되었습니다."
+
+on join:
+	set {튜토단계.%player%} to 0
+
+on right click on entity:
+    if target entity's name contains "가이드":
+        tutorial_conver(player)
+
+function tutorial_conver(p: player):
+    if {튜토단계.%{_p}%} is 0:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>자네 나한테 말을 건걸 보니 도움이 필요한가 보군" to {_p}
+        send "<Bold>우선 &6/scoreboard on&f <Bold>을 입력해서 &b<Bold>점수판&f<Bold>을 띄어보게" to {_p}
+        send "<Bold>이 점수판은 자네의 직업, 소지금, 위치, 바이옴 정보를 나타내는 창일세" to {_p}
+        send "-----------------------------------------------------" to {_p}
+        set {튜토단계.%{_p}%} to 1
+
+    else if {튜토단계.%{_p}%} is 1:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>그리고 여긴 &e<Bold>돈&f<Bold>으로 시작해서 &e<Bold>돈&f<Bold>으로 끝나는 곳이네" to {_p}
+        send "&e<Bold>돈&f<Bold>을 어떻게 벌지 모르겠다고?" to {_p}
+        send "<Bold>그렇다면 내가 알려주지 이 세상의 &a<Bold>진실&f<Bold>을!!" to {_p}
+        send "-----------------------------------------------------" to {_p}
+        set {튜토단계.%{_p}%} to 2
+
+    else if {튜토단계.%{_p}%} is 2:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>우선 &a<Bold>펫말&f<Bold>을 사용하여 약탈방지 방법을 알려주지" to {_p}
+        send "&a<Bold>펫말&f<Bold>은 &b<Bold>문&f<Bold>에 설치하거나 &b<Bold>상자&f<Bold>에 설치할 수 있어" to {_p}
+        send "&b<Bold>문&f<Bold>이나 &b<Bold>상자&f<Bold>를 설치한 사람 외엔 부수거나 열 수없네" to {_p}
+        send "<Bold>그리고 이 세계에서 &e<Bold>돈&f<Bold>을 버는 방법은 4가지가 있다네" to {_p}
+        send "&d<Bold>광업, 농업, 낚시, 사냥&f<Bold>으로 &e<Bold>돈&f<Bold>을 벌 수 있지" to {_p}
+        send "-----------------------------------------------------" to {_p}
+        set {튜토단계.%{_p}%} to 3
+
+    else if {튜토단계.%{_p}%} is 3:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>자네가 일을 열심히 한 후에 리스폰 지역 오른편에 있는 &e<Bold>상점구역&f<Bold>에서" to {_p}
+        send "<Bold>각 물품에 맞는 &e<Bold>상인&f<Bold>들이 자네의 물건을 &e<Bold>매입&f<Bold>하기 위해 대기중일세" to {_p}
+        send "<Bold>그리고 해당하는 &e<Bold>상인&f<Bold>들에게 &2<Bold>마우스 우클릭&f<Bold>으로 말을 걸면" to {_p}
+        send "&e<Bold>상점 페이지&f<Bold>가 나오게 되고 여기서 자네가 물건을 사고 팔 수 있다네" to {_p}
+        send "-----------------------------------------------------" to {_p}
+        set {튜토단계.%{_p}%} to 4
+
+    else if {튜토단계.%{_p}%} is 4:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>물론 자네가 사고 싶은 물건이 있을 순 있겠지" to {_p}
+        send "<Bold>하지만 이 세계에선 자네가 살 수 있는 물건은 매우 &4<Bold>한정적&f<Bold>이니" to {_p}
+        send "&e<Bold>상인&f<Bold>의 물건가격을 잘 살펴보고 결정하면 된다네" to {_p}
+        send "<Bold>또한, &b<Bold>기반암&f<Bold>을 &e<Bold>특수사냥꾼&f<Bold>이 판매중이고 이게 약탈방지에 도움이 될거야" to {_p}
+        send "-----------------------------------------------------" to {_p}
+        set {튜토단계.%{_p}%} to 5
+
+    else if {튜토단계.%{_p}%} is 5:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>이 말을 듣고 자네는 지금 &d<Bold>농사&f<Bold>를 제일 먼저 떠올렸겠지?" to {_p}
+        send "<Bold>아님말고, 만약 &d<Bold>농사&f<Bold>를 할 생각이라면 &6/농사규칙 &f<Bold>명령어를 사용해" to {_p}
+        send "&b<Bold>규칙&f<Bold>을 숙지하고 &d<Bold>농사&f<Bold>를 하면 된다네, &b<Bold>규칙&f<Bold>에 어긋날 시" to {_p}
+        send "<Bold>자네의 밭을 내가 &4<Bold>임의적&f<Bold>으로 &b<Bold>규칙&f<Bold>에 맞게 수정을 할 것이니 참고하게" to {_p}
+        send "-----------------------------------------------------" to {_p}
+        set {튜토단계.%{_p}%} to 6
+
+    else if {튜토단계.%{_p}%} is 6:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>지금 설교가 너무 길다고? 아직 이 세계에 대해 반도 이야기 하지 않았어" to {_p}
+        send "<Bold>하아.. 기다리지 못하는 젊은 친구를 위해 짧게 설명하도록 하지" to {_p}
+        send "&6/서버명령어&f<Bold> 를 통해 서버 내에 사용할 수 있는 명령어를 볼 수 있어" to {_p}
+        send "<Bold>그리고 &d<Bold>전직&f<Bold>, &a<Bold>장비강화&f<Bold>, &b<Bold>무기강화&f<Bold>의 개념도 존재하지" to {_p}
+        send "-----------------------------------------------------" to {_p}
+        set {튜토단계.%{_p}%} to 7
+
+    else if {튜토단계.%{_p}%} is 7:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>전직을 하기 위해서는 &e<Bold>특수상인&f<Bold>이 판매하는 &6<Bold>전직서&f<Bold>라는 아이템이 필요해" to {_p}
+        send "<Bold>그리고 두 가지의 &d<Bold>직업&f<Bold> 중 하나를 선택할 수 있지, &d<Bold>광부, 농부 그리고 어부&f<Bold>야" to {_p}
+        send "<Bold>어느 쪽이든 &d<Bold>전직&f<Bold>을 하게 되면 확실하게 &e<Bold>돈&f<Bold>을 벌 수 있겠지?" to {_p}
+        send "<Bold>그리고 &6/직업안내&f 명령어를 입력하면 &d<Bold>직업&f<Bold>의 상세정보를 볼 수 있어." to {_p}
+        send "-----------------------------------------------------" to {_p}
+        set {튜토단계.%{_p}%} to 8
+
+    else if {튜토단계.%{_p}%} is 8:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>다음은 &a<Bold>장비강화&f<Bold>에 대해서 설명해주겠네" to {_p}
+        send "&a<Bold>장비강화&f<Bold>는 &e<Bold>장인&f<Bold>에게서 할 수 있고 &e<Bold>장인&f<Bold>은 &a<Bold>아무장비&f<Bold>나 &a<Bold>강화&f<Bold>해주진 않는다네" to {_p}
+        send "<Bold>이름하야 &a<Bold>선택장비&f<Bold>! &a<Bold>장비&f<Bold>는 자네가 인첸트를 하든 네더라이트를 바르든" to {_p}
+        send "<Bold>아무 상관이 없어 &4<Bold>단, 이름을 바꾼다면 &a<Bold>장비&f<Bold>는 &4<Bold>일반장비&f<Bold>로 변하니 참고하게&f" to {_p}
+        send "<Bold>선택장비는 &e<Bold>상인&f<Bold>이 &e<Bold>장인&f<Bold> 옆에서 절찬 판매중이니 구매하면 될거야" to {_p}
+        send "<Bold>또한 &a<Bold>장비강화&f<Bold>를 진행할 때 &6/강화안내, /강화방법&f<Bold> 명령어를 통해 &6<bold>추가설명&f을 볼 수 있네" to {_p}
+        send "<Bold>만약 확인을 안하고 미리 고지된 사항이 발생했을 때, &4<Bold>복구는 해주지 않는다네&f" to {_p}
+        send "-----------------------------------------------------" to {_p}
+        set {튜토단계.%{_p}%} to 9
+
+    else if {튜토단계.%{_p}%} is 9:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>마지막으로 &b<Bold>무기강화&f<Bold>에 대해서 설명까지 해..주면 좋겠지만" to {_p}
+        send "<Bold>너무 많은 정보를 초반부터 알려주면 머리만 아프니까" to {_p}
+        send "&b<Bold>무기강화&f<Bold>는 힌트만 주는 선에서 끝내도록 하지." to {_p}
+        send "&6/무기강화&f<Bold> 명령어를 입력하면 설명이 나올게야." to {_p}
+        send "-----------------------------------------------------" to {_p}
+        set {튜토단계.%{_p}%} to 10
+
+    else if {튜토단계.%{_p}%} is 10:
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>자 그럼 설명을 끝났으니 재미있는 마크생활 하라구!" to {_p}
+        send "<Bold>혹시나 궁금한 점이 생겼다면 나에게 다시 말을 걸어본다면" to {_p}
+        send "<Bold>또 내가 친절하게 답변 해줄테니 언제든지 말을 걸어보게" to {_p}
+        send "<Bold>혹시 운영에 관련한 문제나 여기서 나오지 않은 문제나 상황이 발생한다면" to {_p}
+        send "<Bold>디스코드 &6<Bold>빛나는죠르디/2435&f<Bold>로 말해주게 확인하고 답변해주도록하지" to {_p}
+        send "-----------------------------------------------------" to {_p}
+        send "<Bold>튜토리얼이 끝났습니다. 다시 보시려면 우클릭으로 상호작용 해주세요." to {_p}
+        set {튜토단계.%{_p}%} to 0

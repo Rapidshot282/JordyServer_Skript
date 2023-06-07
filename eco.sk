@@ -1,0 +1,33 @@
+options:
+	sp : &a[ &6수표 &a]&f
+
+command /수표 [<integer>]:
+	trigger:
+		if arg-1 is set:
+			if player's money >= arg-1:
+				if player has enough space for 1 paper named "{@sp} %arg-1%G":
+					give paper named "{@sp} &f%arg-1%G" to player
+					remove arg-1 from player's money
+					message "{@sp} %arg-1%G&a만큼 수표를 발급하였습니다. &7(남은 금액: %player's money%)" to player
+				
+				else:
+					message "{@sp} &c인벤토리가 부족하여 수표를 발급할 수 없습니다." to player
+			
+			else:
+				set {_돈} to player's money
+				set {_주문량} to arg-1
+				set {_부족한금액} to {_주문량} - {_돈}
+				message "{@sp} &c돈이 %{_부족한금액}%G 부족합니다. &7(잔액: %player's money%)" to player
+		
+		else:
+			message "{@sp} &c입력하신 금액을 다시 확인해주세요." to player
+			stop
+
+on rightclick with paper:
+	if name of event-item contains "&a[ &6수표 &a]&f":
+		set {_수표} to uncolored name of event-item
+		remove 1 of player's tool from player's tool
+		replace all "[ 수표 ]" and "G" and " " with "" in {_수표}
+		set {_수표} to {_수표} parsed as integer
+		add {_수표} to player's money
+		message "{@sp} &a수표를 사용하여 %{_수표}%G를 얻었습니다." to player

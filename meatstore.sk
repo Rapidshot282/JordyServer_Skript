@@ -1,0 +1,175 @@
+#구문 옵션
+options:
+	c : &6[&e시스템&6]&f
+	s : of current inventory of player to
+	
+#정보
+	1번 : chicken
+	1번이름 : "&6닭고기"
+	1번가격1 : 1000000G
+	1번가격2 : 1000000
+	1번판매가격1 : 30G
+	1번판매가격2 : 30
+	
+	2번 : beef
+	2번이름 : "&6소고기"
+	2번가격1 : 1000000G
+	2번가격2 : 1000000
+	2번판매가격1 : 35G
+	2번판매가격2 : 35
+	
+	3번 : pork
+	3번이름 : "&6돼지고기"
+	3번가격1 : 1000000G
+	3번가격2 : 1000000
+	3번판매가격1 : 30G
+	3번판매가격2 : 30
+	
+	4번 : mutton
+	4번이름 : "&6양고기"
+	4번가격1 : 1000000G
+	4번가격2 : 1000000
+	4번판매가격1 : 30G
+	4번판매가격2 : 30
+	
+	5번 : rabbit
+	5번이름 : "&6토끼고기"
+	5번가격1 : 1000000G
+	5번가격2 : 1000000
+	5번판매가격1 : 150G
+	5번판매가격2 : 150
+	
+	6번 : feather
+	6번이름 : "&6깃털"
+	6번가격1 : 1000000G
+	6번가격2 : 1000000
+	6번판매가격1 : 30G
+	6번판매가격2 : 30
+	
+	7번 : leather
+	7번이름 : "&6소 가죽"
+	7번가격1 : 1000000G
+	7번가격2 : 1000000
+	7번판매가격1 : 30G
+	7번판매가격2 : 30
+	
+	
+#상점을 생성하는 구문
+command /상점생성4:
+	trigger:
+		if player is op:
+			execute op command "/npc create &6고기상인"
+			wait 20 tick
+			execute op command "/npc skin %player%"
+			message "{@c} 상점이 생성되었습니다."
+		
+#상점GUI를 오픈하는 구문
+on right click on entity:
+	if target entity's name contains "고기상인":
+		open chest with 3 rows named "&e고기상인" to player
+		set {_a} to 0
+		set {_b} to 17
+		loop 10 times:
+			set slot {_a} {@s} white stained glass pane
+			set slot {_b} {@s} white stained glass pane
+			add 1 to {_a}
+			add 1 to {_b}
+		set slot 10 {@s} {@1번} named {@1번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@1번가격1}" and "&f▶ 판매 : {@1번판매가격1}" and " " and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매" and " " and "&6[판매방법]" and "&f▶ 좌클릭 시 1개 판매" 
+		set slot 11 {@s} {@2번} named {@2번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@2번가격1}" and "&f▶ 판매 : {@2번판매가격1}" and " " and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매" and " " and "&6[판매방법]" and "&f▶ 좌클릭 시 1개 판매" 
+		set slot 12 {@s} {@3번} named {@3번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@3번가격1}" and "&f▶ 판매 : {@3번판매가격1}" and " " and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매" and " " and "&6[판매방법]" and "&f▶ 좌클릭 시 1개 판매" 
+		set slot 13 {@s} {@4번} named {@4번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@4번가격1}" and "&f▶ 판매 : {@4번판매가격1}" and " " and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매" and " " and "&6[판매방법]" and "&f▶ 좌클릭 시 1개 판매" 
+		set slot 14 {@s} {@5번} named {@5번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@5번가격1}" and "&f▶ 판매 : {@5번판매가격1}" and " " and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매" and " " and "&6[판매방법]" and "&f▶ 좌클릭 시 1개 판매" 
+		set slot 15 {@s} {@6번} named {@6번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@6번가격1}" and "&f▶ 판매 : {@6번판매가격1}" and " " and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매" and " " and "&6[판매방법]" and "&f▶ 좌클릭 시 1개 판매" 
+		set slot 16 {@s} {@7번} named {@7번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@7번가격1}" and "&f▶ 판매 : {@7번판매가격1}" and " " and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매" and " " and "&6[판매방법]" and "&f▶ 좌클릭 시 1개 판매" 
+		
+		
+#상점 물건을 구매 또는 판매하는 구문
+on inventory click:
+	if iname is "&e고기상인":
+		if clicked raw slot is between 10 and 16:
+			cancel event
+			set {_1번} to {@1번}
+			set {_1번이름} to {@1번이름}
+			set {_1번가격2} to {@1번가격2}
+			set {_1번판매가격2} to {@1번판매가격2}
+			
+			set {_2번} to {@2번}
+			set {_2번이름} to {@2번이름}
+			set {_2번가격2} to {@2번가격2}
+			set {_2번판매가격2} to {@2번판매가격2}
+			
+			set {_3번} to {@3번}
+			set {_3번이름} to {@3번이름}
+			set {_3번가격2} to {@3번가격2}
+			set {_3번판매가격2} to {@3번판매가격2}
+			
+			set {_4번} to {@4번}
+			set {_4번이름} to {@4번이름}
+			set {_4번가격2} to {@4번가격2}
+			set {_4번판매가격2} to {@4번판매가격2}
+			
+			set {_5번} to {@5번}
+			set {_5번이름} to {@5번이름}
+			set {_5번가격2} to {@5번가격2}
+			set {_5번판매가격2} to {@5번판매가격2}
+			
+			set {_6번} to {@6번}
+			set {_6번이름} to {@6번이름}
+			set {_6번가격2} to {@6번가격2}
+			set {_6번판매가격2} to {@6번판매가격2}
+			
+			set {_7번} to {@7번}
+			set {_7번이름} to {@7번이름}
+			set {_7번가격2} to {@7번가격2}
+			set {_7번판매가격2} to {@7번판매가격2}
+			# 구매구문
+			set {_a} to 10
+
+			loop 7 times:
+				if clicked raw slot is {_a}:
+					set {_b} to {_a}-9
+					if click type is right mouse button:
+						if player has space for 1 of {_%{_b}%번}:
+							set {_구매가} to {_%{_b}%번가격2}
+							if player's money >= {_구매가}:
+								subtract {_구매가} from player's money
+								give player 1 of {_%{_b}%번}
+								message "{@c} %{_%{_b}%번이름}%&f을(를) 1개 구매하셨습니다!"
+
+					if click type is right mouse button with shift:
+						if player has space for 64 of {_%{_b}%번}:
+							set {_구매가} to {_%{_b}%번가격2}*64
+							if player's money >= {_구매가}:
+								subtract {_구매가} from player's money
+								give player 64 of {_%{_b}%번}
+								message "{@c} %{_%{_b}%번이름}%&f을(를) 64개 구매하셨습니다!"
+								
+					if click type is left mouse button:
+						loop player's inventory:
+							if loop-value-2 is {_%{_b}%번}:
+								if name of loop-value-2 is not set:
+									add 1 to {_item}
+						if {_item} >= 1:
+							set {_구매가} to {_%{_b}%번판매가격2}
+							remove 1 of {_%{_b}%번} from player's inventory
+							add {_구매가} to player's money
+							message "{@c} %{_%{_b}%번이름}%&f을(를) 1개 판매하셨습니다!"
+
+					if click type is left mouse button with shift:
+						loop player's inventory:
+							if loop-value-2 is {_%{_b}%번}:
+								if name of loop-value-2 is not set:
+									set {_tem} to loop-value-2
+									message "%{_tem}%"
+									set {_tem} to "%{_tem}%"
+									replace all "%{_%{_b}%번}%" and "s" and " " with "" in {_tem}
+									set {_tem} to {_tem} parsed as integer
+									message "%{_tem}%개"
+						if {_tem} >= 64:
+							set {_구매가} to {_%{_b}%번판매가격2}*64
+							remove 64 of {_%{_b}%번} from player's inventory
+							add {_구매가} to player's money
+							message "{@c} %{_%{_b}%번이름}%&f을(를) 64개 판매하셨습니다!"
+				add 1 to {_a}
+		else:
+			cancel event

@@ -1,0 +1,102 @@
+#구문 옵션
+options:
+	c : &6[&e시스템&6]&f
+	s : of current inventory of player to
+	
+#정보
+	1번 : skeleton skull named "&6슬롯머신코인" with lore "동전을 슬롯머신 왼쪽에 있는 호퍼에 던지면 슬롯머신이 돌아간다."
+	1번이름 : "&6슬롯머신코인"
+	1번가격1 : 3500G
+	1번가격2 : 3500
+	1번판매가격1 : 1500G
+	1번판매가격2 : 1500
+
+	2번 : glowing Lime Dye named "&a초록 칩" with lore "1000G 칩 우클릭으로 환전"
+	2번이름 : "&a초록칩"
+	2번가격1 : 1000G
+	2번가격2 : 1000
+	2번판매가격1 : 1000G
+	2번판매가격2 : 1000
+
+	3번 : glowing Magenta Dye named "&d보라 칩" with lore "5000G 칩 우클릭으로 환전"
+	3번이름 : "&d보라칩"
+	3번가격1 : 5000G
+	3번가격2 : 5000
+	3번판매가격1 : 5000G
+	3번판매가격2 : 5000
+
+	4번 : glowing Yellow Dye named "&e노랑 칩" with lore "10000G 칩 우클릭으로 환전"
+	4번이름 : "&e노랑 칩"
+	4번가격1 : 10000G
+	4번가격2 : 10000
+	4번판매가격1 : 10000G
+	4번판매가격2 : 10000
+	
+#상점을 생성하는 구문
+command /환전상인생성:
+	trigger:
+		if player is op:
+			execute op command "/npc create &6환전소"
+			wait 20 tick
+			execute op command "/npc skin %player%"
+			message "{@c} 상점이 생성되었습니다."
+		
+#상점GUI를 오픈하는 구문
+on right click on entity:
+	if target entity's name contains "환전소":
+		open chest with 3 rows named "&e환전소" to player
+		set {_a} to 0
+		set {_b} to 17
+		loop 10 times:
+			set slot {_a} {@s} white stained glass pane
+			set slot {_b} {@s} white stained glass pane
+			add 1 to {_a}
+			add 1 to {_b}
+		set slot 10 {@s} {@1번} named {@1번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@1번가격1}" and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매"
+		set slot 11 {@s} {@2번} named {@2번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@2번가격1}" and " " and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매"
+		set slot 12 {@s} {@3번} named {@3번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@3번가격1}" and " " and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매"
+		set slot 13 {@s} {@4번} named {@4번이름} with lore " " and "&6[가격정보]" and "&f▶ 구매 : {@4번가격1}" and " " and "&6[구매방법]" and "&f▶ 우클릭 시 1개 구매"
+
+#상점 물건을 구매 또는 판매하는 구문
+on inventory click:
+	if iname is "&e환전소":
+		if clicked raw slot is between 10 and 16:
+			cancel event
+			set {_1번} to {@1번}
+			set {_1번이름} to {@1번이름}
+			set {_1번가격2} to {@1번가격2}
+			set {_1번판매가격2} to {@1번판매가격2}
+
+			set {_2번} to {@2번}
+			set {_2번이름} to {@2번이름}
+			set {_2번가격2} to {@2번가격2}
+			set {_2번판매가격2} to {@2번판매가격2}
+
+			set {_3번} to {@3번}
+			set {_3번이름} to {@3번이름}
+			set {_3번가격2} to {@3번가격2}
+			set {_3번판매가격2} to {@3번판매가격2}
+
+			set {_4번} to {@4번}
+			set {_4번이름} to {@4번이름}
+			set {_4번가격2} to {@4번가격2}
+			set {_4번판매가격2} to {@4번판매가격2}
+
+
+			# 구매구문
+			set {_a} to 10
+			loop 4 times:
+				if clicked raw slot is {_a}:
+					set {_b} to {_a}-9
+					if click type is right mouse button:
+						if player has space for 1 of {_%{_b}%번}:
+							set {_구매가} to {_%{_b}%번가격2}
+							if player's money >= {_구매가}:
+								subtract {_구매가} from player's money
+								give player 1 of {_%{_b}%번}
+								message "{@c} %{_%{_b}%번이름}%&f을(를) 1개 구매하셨습니다!"
+							
+
+				add 1 to {_a}
+		else:
+			cancel event

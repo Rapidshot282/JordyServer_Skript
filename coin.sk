@@ -1,0 +1,52 @@
+options:
+	c : &6[&e시스템&6]&f
+
+command /코인 [<integer>] [<integer>]:
+    trigger:
+        if player is op:
+            if arg 1 is 1:
+                give arg 2 of glowing Lime Dye named "&a초록 칩" with lore "1000G 칩 우클릭으로 환전" to player
+            if arg 1 is 2:
+                give arg 2 of glowing Magenta Dye named "&d보라 칩" with lore "5000G 칩 우클릭으로 환전" to player
+            if arg 1 is 3:
+                give arg 2 of glowing Yellow Dye named "&e노랑 칩" with lore "10000G 칩 우클릭으로 환전" to player
+            if arg 1 is 4:
+                give arg 2 of glowing Orange Dye named "&b123 당첨칩" with lore "20000G 당첨칩 우클릭으로 환전" to player
+            if arg 1 is 5:
+                give arg 2 of glowing Light Gray Dye named "&b45 당첨칩" with lore "50000G 당첨칩 우클릭으로 환전" to player
+
+on rightclick:
+    if player's tool's name is "&a초록 칩":
+        cancel event
+        message "{@c} &a초록 칩&f을 사용하여 &e1000&f를 획득했습니다." to player
+        play sound "entity.player.levelup" to player
+        add 1000 to player's money
+        remove 1 of player's tool from player's tool
+
+    if player's tool's name is "&d보라 칩":
+        cancel event
+        message "{@c} &d보라 칩&f을 사용하여 &e5000&f를 획득했습니다." to player
+        play sound "entity.player.levelup" to player
+        add 5000 to player's money
+        remove 1 of player's tool from player's tool
+
+    if player's tool's name is "&e노랑 칩":
+        cancel event
+        message "{@c} &e노랑 칩&f을 사용하여 &e10000G&f를 획득했습니다." to player
+        play sound "entity.player.levelup" to player
+        add 10000 to player's money
+        remove 1 of player's tool from player's tool
+
+    if player's tool's name is "&b123 당첨칩":
+        cancel event
+        message "{@c} &b123슬롯당첨&f을 사용하여 &e20000G&f를 획득했습니다." to player
+        play sound "entity.player.levelup" to player
+        add 20000 to player's money
+        remove 1 of player's tool from player's tool
+
+    if player's tool's name is "&b45 당첨칩":
+        cancel event
+        message "{@c} &b45슬롯당첨&f을 사용하여 &e50000G&f를 획득했습니다." to player
+        play sound "entity.player.levelup" to player
+        add 50000 to player's money
+        remove 1 of player's tool from player's tool

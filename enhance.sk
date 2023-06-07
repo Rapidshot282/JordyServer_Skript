@@ -1,0 +1,202 @@
+options:
+    c : &6[&e시스템&6]&f
+    m : &e[&b장인&e]&f
+    s : of current inventory of player to
+    g : +10
+
+command /장인생성:
+	trigger:
+		if player is op:
+			execute op command "/npc create &6장인"
+			wait 20 tick
+			execute op command "/npc skin %player%"
+			message "{@c} 상점이 생성되었습니다."
+
+on right click on entity:
+    if target entity's name contains "장인":
+        open chest with 6 rows named "&e강화 1단계" to player
+        set {_a} to 0
+        set {_b} to 32
+        loop 22 times:
+            set slot {_a} {@s} white stained glass pane
+            set slot {_b} {@s} white stained glass pane
+            add 1 to {_a}
+            add 1 to {_b}
+        set {_a} to 23
+        loop 8 times:
+            set slot {_a} {@s} white stained glass pane
+            add 1 to {_a}
+        set slot 22 {@s} dark oak sign named "&6장비칸" with lore "&f아래에 강화할 장비를 올려놓고" and "&f하단 버튼을 클릭해"
+        set slot 49 {@s} ender eye named "&f다음단계로"
+        delete {강화::%player%::진행중}
+
+on inventory click:
+    if iname contains "&e강화 1단계":
+        if clicked raw slot is 31 or 49:
+            if clicked raw slot is 49:
+                if slot 31 of current inventory of player is not air:
+                    set {강화::%player%::진행중} to true
+                    cancel event
+                    set {강화::%player%::아이템} to slot 31 of current inventory of player
+                    set {강화::%player%::아이템::이름} to name of slot 31 of current inventory of player
+                    set {강화::%player%::아이템::로어::*} to lore of {강화::%player%::아이템}
+                    if {강화::%player%::아이템::이름} contains "&6선택의바지{@g}":
+                        cancel event
+                        message "{@c} 해당 장비는 더이상 강화할 수 없습니다. 장비를 회수해 주세요."
+                        delete {강화::%player%::진행중}
+                    else if {강화::%player%::아이템::이름} contains "&6선택의헬멧{@g}":
+                        cancel event
+                        message "{@c} 해당 장비는 더이상 강화할 수 없습니다. 장비를 회수해 주세요."
+                        delete {강화::%player%::진행중}
+                    else if {강화::%player%::아이템::이름} contains "&6선택의신발{@g}":
+                        cancel event
+                        message "{@c} 해당 장비는 더이상 강화할 수 없습니다. 장비를 회수해 주세요."
+                        delete {강화::%player%::진행중}
+                    else if {강화::%player%::아이템::이름} contains "&6선택의갑옷{@g}":
+                        cancel event
+                        message "{@c} 해당 장비는 더이상 강화할 수 없습니다. 장비를 회수해 주세요."
+                        delete {강화::%player%::진행중}
+                    else:
+                        set {강화::%player%::진행중} to true
+                        open chest with 6 rows named "&6강화 2단계" to player
+                        set slot 10 {@s} dark oak sign named "&6장비칸" with lore "&f강화준비가 완료되면" and "&f하단 버튼을 클릭해"
+                        set slot 16 {@s} dark oak sign named "&6장비칸" with lore "&f강화가 완료된 아이템이" and "&f여기로 나와"
+                        set slot 4 {@s} dark oak sign named "&6재료칸" with lore "&f[강화에 필요한 재료]" and "&f강화재료를 여기에 등록해줘"
+                        set slot 49 {@s} ender eye named "&f장비강화"
+                        set slot 46 {@s} white stained glass pane
+                        set slot 52 {@s} ender eye named "&f강화종료"
+                        set slot 19 {@s} {강화::%player%::아이템}
+                        set {_slot::*} to 0, 1, 2, 3, 5, 6, 7, 8, 9, 11, 15, 17, 18, 20, 24, 47, 48, 50, 51 and 53
+                        loop {_slot::*}:
+                            set slot loop-value {@s} white stained glass pane
+                        set {_a} to 26
+                        loop 20 times:
+                            set slot {_a} {@s} white stained glass pane
+                            add 1 to {_a}
+                        delete {강화::%player%::진행중}
+                else:
+                    cancel event
+                    message "{@m} &6[ &f강화할 장비를 올려놔 &6]"
+        else:
+            if clicked raw slot is not between 54 and 89:
+                cancel event
+
+command /강화재료설정 [<integer>]:
+    trigger:
+        open chest with 1 rows named "&6강화재료설정" to player
+        set slot 0 {@s} white stained glass pane
+        set slot 8 {@s} white stained glass pane
+        set {_a} to 1
+        loop {장비강화재료::*}:
+            if {_a} <= 7:
+                set slot {_a} {@s} loop-value
+                add 1 to {_a}
+on inventory click:
+    if iname is "&6강화재료설정":
+        if clicked raw slot is 0 or 8:
+            cancel event
+
+on inventory close:
+    if icname contains "&6강화재료설정":
+        delete {장비강화재료::*}
+        set {_int} to 1
+        loop 7 times:
+            add slot {_int} {@s} {장비강화재료::*}
+            add 1 to {_int}
+
+on inventory click:
+    if iname contains "&6강화 2단계":
+        if clicked raw slot is 52 or 49 or 46 or 25 or 12 or 13 or 14 or 21 or 22 or 23:
+            if clicked raw slot is 49:
+                if slot 19 of current inventory of player is not air:
+                    set {강화::%player%::진행중} to true
+                    cancel event
+                    set {_재료::*} to slot 12 and 13 and 14 and 21 and 22 and 23 of current inventory of player
+                    if {_재료::*} contains {장비강화재료::*}:
+                        set slot 12 and 13 and 14 and 21 and 22 and 23 {@s} air
+                        loop {강화::%player%::아이템::로어::*}:
+                            if {강화::%player%::아이템::로어::%loop-index%} contains "체력":
+                                set {_체력스텟} to uncolored {강화::%player%::아이템::로어::%loop-index%}
+                                replace all " " and "-" and "체력" with "" in {_체력스텟}
+                                set {_체력스텟} to {_체력스텟} parsed as number
+                            if {강화::%player%::아이템::로어::%loop-index%} contains "방어력":
+                                set {_방어력스텟} to uncolored {강화::%player%::아이템::로어::%loop-index%}
+                                replace all " " and "-" and "방어력" with "" in {_방어력스텟}
+                                set {_방어력스텟} to {_방어력스텟} parsed as number
+                            if {강화::%player%::아이템::로어::%loop-index%} contains "공격":
+                                set {_공격st} to uncolored {강화::%player%::아이템::로어::%loop-index%}
+                                replace all " " and "-" and "공격" with "" in {_공격st}
+                                set {_공격st} to {_공격st} parsed as number
+                                chance of 25%:
+                                    add 1 to {_체력스텟}
+                                    add 1 to {_방어력스텟}
+                                    add 1 to {_공격st}
+                                    loop {강화::%player%::아이템::로어::*}:
+                                        if {강화::%player%::아이템::로어::%loop-index-2%} contains "체력":
+                                            set {강화::%player%::아이템::로어::%loop-index-2%} to "&f - 체력 %{_체력스텟}%"
+                                        if {강화::%player%::아이템::로어::%loop-index-2%} contains "방어력":
+                                            set {강화::%player%::아이템::로어::%loop-index-2%} to "&f - 방어력 %{_방어력스텟}%"
+                                        if {강화::%player%::아이템::로어::%loop-index-2%} contains "공격":
+                                            set {강화::%player%::아이템::로어::%loop-index-2%} to "&f - 공격 %{_공격st}%"
+                                    set slot 19 {@s} air
+                                    wait 10 tick
+                                    set {_이름색} to name of {강화::%player%::아이템}
+                                    set {_이름} to uncolored name of {강화::%player%::아이템}
+                                    replace all {_이름} with "" in {_이름색}
+                                    set {_이름::*} to uncolored {_이름} split by "+"
+                                    if {_이름::2} is set:
+                                        replace all " " with "" in {_이름::2}
+                                        set {_이름::2} to {_이름::2} parsed as number
+                                        add 1 to {_이름::2}
+                                        set {_최종이름} to "%{_이름색}%%{_이름::1}%+%{_이름::2}%"
+                                    else:
+                                        set {_최종이름} to "%{_이름색}%%{_이름::1}%+1"
+                                    set slot 25 {@s} {강화::%player%::아이템} named "%{_최종이름}%" with lore {강화::%player%::아이템::로어::*}
+                                    delete {강화::%player%::*}
+                                    message "{@m} &6[ &f강화에 성공했군! 축하해! &e(연속강화는 안된다네, 장비를 회수하고 강화창을 닫아주게) &6]"
+                                    stop
+                                    delete {강화::%player%::진행중}
+                                else:
+                                    set slot 19 {@s} air
+                                    wait 20 tick
+                                    set slot 25 {@s} {강화::%player%::아이템}
+                                    delete {강화::%player%::*}
+                                    message "{@m} &6[ &f어이쿠.. 손이.. 실패했네.. &e(연속강화는 안된다네, 장비를 회수하고 강화창을 닫아주게) &6]"
+                                    stop
+                                    delete {강화::%player%::진행중}
+                    else:
+                        cancel event
+                        message "{@m} &6[ &f강화에 필요한 재료가 부족하네! &6]"
+                else:
+                    cancel event
+                    message "{@m} &6[ &f이미 강화가 완료되었다네! &6]"
+            if clicked raw slot is 52:
+                cancel event
+                if slot 19 of current inventory of player is air:
+                    if slot 25 of current inventory of player is air:
+                        close player's inventory
+                    else:
+                        message "{@m} &6[ &f장비를 회수하게! 바닥에 떨어져있으니 잘 찾아보게&6]"
+                else:
+                    message "{@m} &6[ &f장비를 회수하게! 바닥에 떨어져있으니 잘 찾아보게&6]"
+        else:
+            if clicked raw slot is not between 54 and 89:
+                cancel event
+
+on inventory close:
+    if icname contains "&e강화 1단계":
+        if {강화::%player%::진행중} is not set:
+            if slot 31 of current inventory of player is not air:
+                message "{@m} &6[ &f장비를 회수하게! 바닥에 떨어져있으니 잘 찾아보게! &6]"
+                drop slot 31 of current inventory of player at player
+    if icname contains "&6강화 2단계":
+        set {_재료::*} to slot 12 and 13 and 14 and 19 and 21 and 22 and 23 and 25 of current inventory of player
+        loop {_재료::*}:
+            if loop-value is air:
+                remove loop-value from {_재료::*}
+        message "{@m} &6[ &f장비를 회수하게! 바닥에 떨어져있으니 잘 찾아보게! &6]"
+        drop {_재료::*} at player
+    if icname is "&6강화재료":
+        if {강화::%player%::진행중} is not set:
+            drop {강화::%player%::아이템} at player
+            delete {강화::%player%::*}

@@ -1,0 +1,46 @@
+options:
+    c : &6[&e시스템&6]&f
+
+command /포션 [<integer>]:
+    trigger:
+        if player is op:
+            if arg 1 is 1:
+                give 1 of Dragon's Breath named "&c회복물약&f (&e소&f)" with lore "체력을 &c25%%&f회복합니다." to player
+            if arg 1 is 2:
+                give 1 of Dragon's Breath named "&c회복물약&f (&e중&f)" with lore "체력을 &c50%%&f회복합니다." to player
+            if arg 1 is 3:
+                give 1 of Dragon's Breath named "&c회복물약&f (&e대&f)" with lore "체력을 &c75%%&f회복합니다." to player
+
+on rightclick:
+    if player's tool's name is "&c회복물약&f (&e소&f)":
+        if player's health is max health of player:
+            message "{@c} <Bold>이미 &e<Bold>최대 체력&f<Bold>이므로 사용하실 수 없습니다." to player
+            cancel event
+        else:
+            cancel event
+            message "{@c} &c회복물약&f (&e소&f)를 사용했습니다." to player
+            play sound "entity.wandering.trader.drink.potion" to player
+            heal player by max health of player*50% hearts
+            remove 1 of player's tool from player's tool
+
+    if player's tool's name is "&c회복물약&f (&e중&f)":
+        if player's health is max health of player:
+            message "{@c} <Bold>이미 &e<Bold>최대 체력&f<Bold>이므로 사용하실 수 없습니다." to player
+            cancel event
+        else:
+            cancel event
+            message "{@c} &c회복물약&f (&e중&f)을 사용했습니다." to player
+            play sound "entity.wandering.trader.drink.potion" to player
+            heal player by max health of player*50% hearts
+            remove 1 of player's tool from player's tool
+
+    if player's tool's name is "&c회복물약&f (&e대&f)":
+        if player's health is max health of player:
+            message "{@c} <Bold>이미 &e<Bold>최대 체력&f<Bold>이므로 사용하실 수 없습니다." to player
+            cancel event
+        else:
+            cancel event
+            message "{@c} &c회복물약&f (&e대&f)를 사용했습니다." to player
+            play sound "entity.wandering.trader.drink.potion" to player
+            heal player by max health of player*50% hearts
+            remove 1 of player's tool from player's tool

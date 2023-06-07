@@ -1,0 +1,9 @@
+command /칭호설정 [<offlineplayer>] [<text>]:
+    trigger:
+        if player is op:
+            set {칭호::%arg 1%} to "&2[%arg 2%&2]&f"
+            message "칭호가 설정되었습니다! - 칭호 : &2[%arg 2%&2]&f"
+
+on chat:
+    if {칭호::%player%} is set:
+        set message format to "%{칭호::%player%}% %message format%"

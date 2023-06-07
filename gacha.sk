@@ -1,0 +1,89 @@
+#랜덤뽑기
+#특정 블럭의 좌표를 저장하고
+#이후 해당 좌표에 블럭을 클릭했을꺠
+#해당 구문이 발동되는 스크립트
+
+command /가챠머신생성 [<text>]:
+    trigger:
+        if player is op:
+            if player's tool is not air:
+                set {가챠머신::목록::%arg 1%} to 1 of player's tool
+                give player 1 of stick named "&d%arg 1%의 버튼설정" with lore " " and "&f손에 들고 우클릭시" and "&f가챠머신의 버튼설정"
+
+on right click on stone button with stick:
+    if uncolored name of player's tool contains "버튼설정":
+        cancel event
+        set {_name} to uncolored name of player's tool
+        replace all " " and "의" and "버튼설정" with "" in {_name}
+        message "%{_name}%"
+        if {가챠머신::목록::%{_name}%} is set:
+            set {가챠머신::좌표::%{_name}%} to target block's location
+            remove player's tool from player's tool
+            wait 1 tick
+            message "%{_name}%머신 버튼설정 완료!"
+
+command /가챠머신관리:
+    trigger:
+        if player is op:
+            open chest with 3 rows named "&6가챠머신목록" to player
+            set {_a} to 0
+            set {_b} to 17
+            loop 10 times:
+                set slot {_a} of current inventory of player to white stained glass pane
+                set slot {_b} of current inventory of player to white stained glass pane
+                add 1 to {_a}
+                add 1 to {_b}
+            set {_a} to 10
+            loop {가챠머신::목록::*}:
+                set slot {_a} of current inventory of player to loop-value named "&d%loop-index%" with lore " "
+                add 1 to {_a}
+
+on inventory click:
+    if iname contains "&6가챠머신목록":
+        if clicked raw slot is between 10 and 16:
+            set {_아이템} to clicked slot
+            if {_아이템} is not air:
+                cancel event
+                set {_name} to uncolored name of clicked slot
+                open chest with 6 rows named "%{_name}%머신 상품목록" to player
+                set {_a} to 0
+                loop {가챠머신::상품::%{_name}%::*}:
+                    set slot {_a} of current inventory of player to loop-value
+                    add 1 to {_a}
+            else:
+                cancel event
+        else:
+            cancel event
+
+on inventory close:
+    if icname contains "상품목록":
+        set {_name} to icname
+        replace all " " and "머신" and "상품목록" with "" in {_name}
+        delete {가챠머신::상품::%{_name}%::*}
+        set {_int} to 0
+        loop 54 times:
+            add slot {_int} of current inventory of player to {가챠머신::상품::%{_name}%::*}
+            add 1 to {_int}
+        delete {가챠슬롯물품설정.%player%}
+
+command /가챠코인 [<text>] [<integer>]:
+    trigger:
+        if player is op:
+            give player arg 2 of paper named "&6%arg 1% 코인"
+
+on right click on stone button with paper:
+    if name of player's tool contains "코인":
+        set {_name} to uncolored name of player's tool
+        replace all " " and "코인" with "" in {_name}
+        if target block's location is {가챠머신::좌표::%{_name}%}:
+            set {_a} to size of {가챠머신::상품::%{_name}%::*}
+            set {_b} to random integer between 1 and {_a}
+            give {가챠머신::상품::%{_name}%::%{_b}%} to player
+            remove 1 of player's tool from player's tool
+
+command /가챠머신제거:
+    trigger:
+        delete {가챠머신::*}
+        message "완료"
+
+    

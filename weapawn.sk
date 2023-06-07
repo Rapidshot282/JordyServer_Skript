@@ -1,0 +1,112 @@
+options:
+    n : attacker's tool's sharpness enchant level
+
+command /강화장비:
+    trigger:
+        if player is op:
+            give 1 of diamond helmet named "&6선택의헬멧" with lore " " and "&f - 체력 1" and "&f - 방어력 1" and "&f - 공격 1" to player 
+            give 1 of diamond chestplate named "&6선택의갑옷" with lore " " and "&f - 체력 1" and "&f - 방어력 1" and "&f - 공격 1" to player
+            give 1 of diamond leggings named "&6선택의바지" with lore " " and "&f - 체력 1" and "&f - 방어력 1" and "&f - 공격 1" to player 
+            give 1 of diamond boots named "&6선택의신발" with lore " " and "&f - 체력 1" and "&f - 방어력 1" and "&f - 공격 1" to player
+
+command /강화재료:
+    trigger:
+        if player is op: 
+            give 1 of paper named "&6강화티켓" to player
+            give 3 of phantom membrane to player
+            give 2 of end rod to player            
+            give 1 of netherite scrap to player
+
+every 10 tick:
+    loop all players:
+        if loop-player's helmet is not air:
+            set {_lore::*} to uncolored lore of loop-player's helmet
+            loop {_lore::*}:
+                if {_lore::%loop-index%} contains "체력":
+                    set {_health} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "체력" with "" in {_health}
+                    set {helmet::%loop-player%::health} to {_health} parsed as number
+                if {_lore::%loop-index%} contains "방어력":
+                    set {_defensive} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "방어력" with "" in {_defensive}
+                    set {helmet::%loop-player%::defensive} to {_defensive} parsed as number
+                if {_lore::%loop-index%} contains "공격":
+                    set {_power} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "공격" with "" in {_power}
+                    set {helmet::%loop-player%::power} to {_power} parsed as number                   
+        else:
+            delete {helmet::%loop-player%::*}
+
+        if loop-player's chestplate is not air:
+            set {_lore::*} to uncolored lore of loop-player's chestplate
+            loop {_lore::*}:
+                if {_lore::%loop-index%} contains "체력":
+                    set {_health} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "체력" with "" in {_health}
+                    set {chestplate::%loop-player%::health} to {_health} parsed as number
+                if {_lore::%loop-index%} contains "방어력":
+                    set {_defensive} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "방어력" with "" in {_defensive}
+                    set {chestplate::%loop-player%::defensive} to {_defensive} parsed as number
+                if {_lore::%loop-index%} contains "공격":
+                    set {_power} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "공격" with "" in {_power}
+                    set {chestplate::%loop-player%::power} to {_power} parsed as number
+        else:
+            delete {chestplate::%loop-player%::*}     
+
+        if loop-player's leggings is not air:
+            set {_lore::*} to uncolored lore of loop-player's leggings
+            loop {_lore::*}:
+                if {_lore::%loop-index%} contains "체력":
+                    set {_health} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "체력" with "" in {_health}
+                    set {leggings::%loop-player%::health} to {_health} parsed as number
+                if {_lore::%loop-index%} contains "방어력":
+                    set {_defensive} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "방어력" with "" in {_defensive}
+                    set {leggings::%loop-player%::defensive} to {_defensive} parsed as number
+                if {_lore::%loop-index%} contains "공격":
+                    set {_power} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "공격" with "" in {_power}
+                    set {leggings::%loop-player%::power} to {_power} parsed as number          
+        else:
+            delete {leggings::%loop-player%::*}  
+
+        if loop-player's boots is not air:
+            set {_lore::*} to uncolored lore of loop-player's boots
+            loop {_lore::*}:
+                if {_lore::%loop-index%} contains "체력":
+                    set {_health} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "체력" with "" in {_health}
+                    set {boots::%loop-player%::health} to {_health} parsed as number
+                if {_lore::%loop-index%} contains "방어력":
+                    set {_defensive} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "방어력" with "" in {_defensive}
+                    set {boots::%loop-player%::defensive} to {_defensive} parsed as number
+                if {_lore::%loop-index%} contains "공격":
+                    set {_power} to "%{_lore::%loop-index%}%"
+                    replace all " " and "-" and "공격" with "" in {_power}
+                    set {boots::%loop-player%::power} to {_power} parsed as number     
+        else:
+            delete {boots::%loop-player%::*}
+
+every 10 tick:
+    loop all players:
+        set {health.%loop-player%} to ({helmet::%loop-player%::defensive}+{chestplate::%loop-player%::defensive}+{boots::%loop-player%::defensive}+{leggings::%loop-player%::defensive})/4
+        set {power.%loop-player%} to ({helmet::%loop-player%::defensive}+{chestplate::%loop-player%::defensive}+{boots::%loop-player%::defensive}+{leggings::%loop-player%::defensive})/4
+        set {defensive.%loop-player%} to ({helmet::%loop-player%::defensive}+{chestplate::%loop-player%::defensive}+{boots::%loop-player%::defensive}+{leggings::%loop-player%::defensive})/4
+        set loop-player's max health to {health.%loop-player%}+10
+        set loop-player's damage to ({power.%loop-player%})+1
+
+
+on damage:
+    if attacker is player:
+        if {power.%attacker%} is set:
+            message "&f기본 데미지 : %damage%" to attacker
+            set damage to damage+{power.%attacker%}
+            message "&f최종 데미지 : %(damage*2)%" to attacker
+    if victim is player:
+        if {defensive.%victim%} is set:
+            set damage to damage-{defensive.%victim%}
+            message "&f받은 데미지 : %(damage/4)%" to victim

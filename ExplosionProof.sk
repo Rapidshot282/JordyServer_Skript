@@ -1,0 +1,19 @@
+on explode:
+	if {explosion_proof} is true:
+		cancel event
+
+command /explosionproof [<string>]:
+	trigger:
+		if arg 1 is "start":
+			if player is op:
+				set {explosion_proof} to true
+				broadcast "폭발방지가 실행되었습니다."
+			
+		if arg 1 is "stop":
+			if player is op:
+				set {explosion_proof} to false
+				broadcast "폭발방지가 취소되었습니다."
+			
+		if arg 1 is not "start" or "stop":
+			if player is op:
+				message "명령어 : /explosionproof [start / stop]"

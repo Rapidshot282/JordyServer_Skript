@@ -1,0 +1,183 @@
+options:
+    j : &6[&e시스템&6]&f
+
+command /서버명령어:
+    trigger:
+        message "{@j} 명령어 목록" to player
+        message "&6/scoreboard on/off&f => <Bold>오른쪽에 있는 점수판을 켜거나 끌 수 있습니다." to player
+        message "&6/startitem&f => <Bold>시작 아이템을 지급받습니다." to player
+        message "&6/balancetop&f => <Bold>소지금 기준의 서버 랭킹을 볼 수 있습니다. (운영자에게 말씀해주셔야 사용 가능합니다.)" to player
+        message "&6/invsave&f => <Bold>아이템 &b세이브&f에 관한 명령어를 볼 수 있습니다." to player 
+        message "{@j} &6/서버명령어2&f로 다음페이지 보기 [&e1&f/&e3&f]" to player
+
+command /서버명령어2:
+    trigger:
+        message "{@j} 명령어 목록2" to player
+        message "&6/수표&f &b[금액]&f => &b[금액]&f<Bold>에 따른 수표를 얻습니다." to player
+        message "&6/귓 &b[닉네임] [내용]&f => <Bold>해당 닉네임을 가진 유저에게 귓속말을 보낼 수 있습니다." to player
+        message "&6/강화안내&f => <Bold>강화에 대한 주의사항을 볼 수 있습니다." to player
+        message "&6/강화방법&f => <Bold>강화에 대한 방법을 볼 수 있습니다." to player
+        message "{@j} &6/서버명령어3&f로 다음페이지 보기 [&e2&f/&e3&f]" to player
+
+command /서버명령어3:
+    trigger:
+        message "{@j} 명령어 목록3" to player
+        message "&6/무기강화&f => <Bold>무기강화에 필요한 명령어와 설명을 볼 수 있습니다." to player
+        message "&6/직업안내&f => <Bold>전직할 수 있는 직업의 상세 설명을 볼 수 있습니다." to player
+        message "&6/직업&f => <Bold>자신의 직업에 대한 정보를 볼 수 있습니다. &d<Bold>(전직필요)&f" to player
+        message "&6/농사규칙&f => <Bold>농사 규칙을 볼 수 있습니다." to player
+        message "{@j} &6/서버명령어4&f [&e3&f/&e4&f]" to player
+
+command /서버명령어4:
+    trigger:
+        message "{@j} 명령어 목록4" to player
+        message "&6/카지노&f => <Bold>카지노에 있는 게임들에 대한 방법들을 볼 수 있습니다." to player
+        message "&6/랜덤뽑기&f => <Bold>랜덤뽑기에 대한 방법과 확률을 볼 수 있습니다." to player
+        message "&6/기반암&f => <Bold>기반암 설치에 대한 &c주의사항&f을 볼 수 있습니다." to player
+        message "{@j} 마지막 페이지 입니다. [&e4&f/&e4&f]" to player
+
+every 600 seconds:
+    broadcast "{@j} &e/서버명령어 &f를 채팅창에 입력하면 서버에서 사용되는 명령어 목록을 볼 수 있습니다. (ex. 강화 등)"
+    broadcast "{@j} &e닉네임&f은 절대 &4변경&f하면 안됩니다. 본인의 플레이 데이터가 날아갈 수 있습니다. (ex. 직업 등)"
+
+command /농사규칙:
+    trigger:
+        message "{@j} 농사규칙" to player
+        message "&3<Bold>물&f<Bold> 한칸당 기름진 땅을 만들 수 있는 영역을 &b<Bold>1칸&f<Bold>으로 정합니다. (9x9)" to player
+        message "<Bold>1인당 총 &b<Bold>9칸&f<Bold>의 땅을 만들 수 있습니다." to player
+        message "<Bold>1인당 가축은 &b<Bold>소&f<Bold> &4<Bold>1&f<Bold>마리 &b<Bold>닭&f<Bold> &4<Bold>4&f<Bold>마리로 고정입니다." to player
+        message "&b<Bold>9칸&f <Bold>내에 모든 작물을 길러야 합니다. (ex: 코코아콩 나무, 사탕수수, 버섯)" to player
+        message "<Bold>명시된 땅 이외에 만들어진 땅은 운영자가 규칙에 따라 &4<Bold>수정&f<Bold>할 수 있습니다." to player
+        message "<Bold>기타 문의사항은 &b<Bold>운영자&f<Bold>에게 문의해주시면 빠르게 답변해드리겠습니다." to player
+
+command /강화안내:
+    trigger:
+        message "{@j} 강화안내" to player
+        message "<Bold>강화진행 후 다시 시도할 경우 일단 창을 끄고 npc에게 상호작용하여 다시 강화를 시도해주세요. 만약 바로 진행 시 &4<Bold>강화재료가 삭제 됩니다." to player
+        message "<Bold>강화전용 장비&a<Bold>[선택 세트]&f<Bold>가 아닌 다른 장비를 강화하는 경우, 강화재료만 사라지고 강화가 진행되지 않습니다. &4<Bold>주의 부탁드립니다." to player
+        message "<Bold>또한, 장비의 &a<Bold>이름&f<Bold>을 &e<Bold>임의수정&f<Bold> 시, 강화가 &4<Bold>진행되지 않습니다." to player
+        message "<Bold>강화에 필요한 아이템은 &6<Bold>네더라이트파편x1, 엔드막대기x2, 팬텀막x3, 강화티켓x1&f <Bold>이 필요합니다!" to player
+        message "<Bold>아이템은 항상 각 강화 수량에 맞게 넣으셔야 합니다. 한번에 넣으면 강화가 &4<Bold>진행되지 않습니다!" to player
+
+command /강화방법:
+    trigger:
+        message "{@j} 강화안내" to player
+        message "<Bold>강화전용 장비&a<Bold>[선택 세트]&f<Bold>가 아닌 다른 장비를 강화하는 경우, 강화재료만 사라지고 강화가 진행되지 않습니다. &4<Bold>주의 부탁드립니다." to player
+        message "&e<Bold>장인&f<Bold>에게 우클릭 후 강화할 장비를 올려두고 중앙에 있는 &2<Bold>엔더의 눈&f<Bold>을 클릭하세요." to player
+        message "<Bold>그 다음 중앙에 &b<Bold>1회 분&f<Bold>의 강화재료를 올려둡니다. &4<Bold>일괄로 올리시면 진행되지 않습니다." to player
+        message "<Bold>강화재료를 올린 뒤 &2<Bold>엔더의 눈&f<Bold>을 클릭하면 결과가 &e<Bold>채팅창&f<Bold>에 출력됩니다." to player
+        message "<Bold>강화확률은 모든 구간 &e<Bold>25&f<Bold>퍼센트입니다. 그리고 최대강화수치는 &e<Bold>+10&f<Bold>입니다." to player
+
+command /기반암:
+    trigger:
+        message "{@j} 기반암 주의사항"
+        message "<Bold>기반암은 설치시 부서지지 않으므로 운영자가 있을 때 설치하시는걸 권장드립니다." to player
+        message "<Bold>만약 잘못 설치가 되었을 시에 운영자에게 말하면 부서드리고 부서진 만큼의 " to player
+        message "<Bold>기반암을 돌려드리고 있습니다." to player
+        message "<Bold>오직 기반암은 자신의 &e<Bold>집, 재산&f<Bold>을 지키는 용도 외에 사용을 일절 &4<Bold>금지합니다." to player
+        message "<Bold>만약 기반암으로 테러행위를 벌일 시에 로그를 기반으로 &4<Bold>ip밴을 할 것입니다." to player
+        message "<Bold>기타 문의사항은 &b<Bold>운영자&f<Bold>에게 문의해주시면 빠르게 답변해드리겠습니다." to player
+
+command /직업안내:
+    trigger:
+        message "{@j} 직업안내" to player
+        message "<Bold>직업은 &d<Bold>광부, 농부, 낚시꾼이 있습니다." to player
+        message "<Bold>직업변경은 먼저 &6<Bold>초기화권&f<Bold>으로 초기화를 하고 전직서를 통해 다시 전직해야 합니다." to player
+        message "<Bold>직업변경 시 기존 직업의 &6<Bold>경험치&f<Bold>는 &4<Bold>계승되지 않습니다." to player
+        message "<Bold>&b<Bold>낚시꾼&f<Bold>을 제외한 모든 직업(뉴비 포함)은 낚시 진행 시 &6<Bold>보상&f<Bold>이 &4<Bold>드랍되지 않습니다." to player
+        message "<Bold>직업의 상세정보는 &6/광부, /농부, /낚시꾼 명령어로 확인해주세요!" to player
+
+command /광부:
+    trigger:
+        message "{@j} 광부" to player
+        message "<Bold>광부는 광물을 확률적으로 더 많이 캡니다. 이는 행운곡괭이 보다 더 효율적입니다." to player
+        message "<Bold>광부는 1레벨에 3-5개, 3레벨에 4-6개, 5레벨에 5-7개의 광물이 드랍됩니다." to player
+        message "<Bold>추가로 드랍되는 광물은 [철, 금, 다이아몬드, 에메랄드] 입니다." to player
+        message "<Bold>고대의잔해는 3, 5레벨에 추가 드랍이 됩니다." to player
+        message "<Bold>성급함효과가 5레벨에 패시브로 적용될 예정입니다.(추후 업데이트)" to player
+
+command /농부:
+    trigger:
+        message "{@j} 농부" to player
+        message "<Bold>농부는 씨앗을 자동으로 심습니다(자동심기는 밀, 비트씨앗만 적용됩니다.)" to player
+        message "<Bold>농부는 작물을 레벨당 작물을 추가 재배 합니다.(밀, 비트, 코코아 콩)" to player
+        message "<Bold>버섯을 캘 경우 버섯은 광부의 광물 매커니즘과 동일하게 작동됩니다." to player
+        message "<Bold>반드시 &6<Bold>/농사규칙&f<Bold> 에 기재된 사항들을 숙지하시고 농지를 건설해야 합니다." to player
+
+command /낚시꾼:
+    trigger:
+        message "{@j} 낚시꾼" to player
+        message "<Bold>기본적으로 낚시꾼은 낚시를 할 때 '&b<Bold>미끼&f<Bold>'라는 아이템이 필요합니다." to player
+        message "<Bold>20%%확률로 미끼가 소모되지 않습니다. &b<Bold>미끼&f<Bold>는 어부npc가 판매하고 있습니다." to player
+        message "<Bold>낚시꾼은 찌를 물었을 떄 미니게임을 진행해서 물고기를 낚을 수 있습니다." to player
+        message "<Bold>미니 게임에서 화면에 나오는 R과 L의 조합을 마우스 클릭으로 처리하면 됩니다." to player
+        message "<Bold>미니 게임은 마우스로 진행하며, 너무 빠르거나 느리면 실패합니다." to player
+        message "<Bold>드랍되는 물고기는 대구, 복어, 연어, 흰동가리, 앵무조개 껍데기 입니다." to player
+
+command /카지노:
+    trigger:
+        message "&6/슬롯머신 => <Bold>슬롯머신 사용방법에 대해 알아봅니다." to player
+        message "&6/고양이포커 => <Bold>고양이 포커의 방법에 대해 알아봅니다." to player
+        message "&6/꽃도박 => <Bold>꽃도박의 방법에 대해 알아봅니다." to player
+
+command /슬롯머신:
+    trigger:
+        message "<Bold>슬롯머신 왼쪽에 있는 호퍼를 향해 코인을 들고 ' q '키로 던집니다" to player
+        message "<Bold>확률과 당첨금은 각 슬롯머신 오른쪽 펫말에 적혀있습니다" to player
+
+command /고양이포커:
+    trigger:
+        message "<Bold>고양이 포커는 카지노 정문기준 왼쪽에 있는 구조물 입니다" to player
+        message "<Bold>해당 게임은 2명의 플레이어가 필요합니다." to player
+        message "<Bold>해당 게임의 룰북이 중앙 상자에 있습니다. 열람한 뒤에 게임이 끝난 후, 제자리에 넣으면 됩니다." to player
+
+command /꽃도박:
+    trigger:
+        message "<Bold>꽃 도박은 &b<Bold>운영자&f<Bold>의 입회 하에 게임진행이 가능합니다." to player
+        message "<Bold>배율은 판 앞에 펫말에 적혀있습니다." to player
+
+command /랜덤뽑기:
+    trigger:
+        message "<Bold>뽑기권을 특수상인에게 구입해서 티켓에 적혀있는 &b<Bold>색깔&f<Bold>기계에서 사용하시면 됩니다." to player
+        message "<Bold>뽑기 기계 바로 앞에서 티켓을 들고 버튼을 우클릭하시면 뽑기기계가 제공하는 아이템이 제공됩니다." to player
+        message "<Bold>확률은 &6/핑크 &6/청록 &6/주황 &f명령어로 확인할 수 있습니다." to player
+
+command /핑크:
+    trigger:
+        message "<Bold><&5<Bold>핑크&f<Bold>기계 확률>" to player
+        message "<Bold> 해당뽑기는 &5<Bold>인챈트 책&f<Bold> 상품이 포함된 뽑기 입니다." to player
+        message "<Bold>1티어 => 각 1.85%% 전체확률 5.55%%" to player
+        message "<Bold>2티어 => 각 3.7%% 전체확률 7.2%%" to player
+        message "<Bold>3티어 => 각 5.55%% 전체확률 72.15%%" to player
+        message "<Bold>4티어 => 9.25%%" to player
+        message "&6/핑크상품 &f<Bold>명령어로 상세한 상품목록을 확인할 수 있습니다." to player
+
+command /핑크상품:
+    trigger:
+        message "<Bold><&5<Bold>핑크&f<Bold> 상품목록>" to player
+        message "<Bold>1티어 => 수선, 겉날개, 설커상자" to player
+        message "<Bold>2티어 => 네더라이트 파편, 가벼운착지" to player
+        message "<Bold>3티어 => 불사의 토템, 신속한 잠행, 효율, 날카로움, 약탈, 무한, 섬세한 손길" to player
+        message "<Bold>행운, 바다의 행운, 화염, 보호, 내구성, 힘" to player
+        message "<Bold>4티어 => 경험치병x64" to player
+
+command /청록:
+    trigger:
+        message "<Bold><&2<Bold>청록&f<Bold>기계 확률>" to player
+        message "<Bold> 야간투시 물약을 제외한 모든상품 5.55%% &b<Bold>균등확률&f<Bold>입니다." to player
+        message "<Bold> 야간투시 물약의 확률은 &e<Bold>11.10%%&f<Bold>입니다." to player
+        message "<Bold> 해당뽑기는 &5<Bold>물약&f<Bold> 상품이 포함된 뽑기 입니다." to player
+        message "<Bold> 모든 상품은 '분' 기준입니다." to player
+        message "&6/청록상품 &f<Bold>명령어로 상세한 상품목록을 확인할 수 있습니다." to player
+
+command /청록상품:
+    trigger:
+        message "<Bold><&2<Bold>청록&f<Bold> 상품목록>" to player
+        message "<Bold> 힘(8:00), 힘2(1:30), 야간투시(3:00), 야간투시(8:00), 수중호흡(8:00), 속도증가(8:00)" to player
+        message "<Bold> 속도증가2(1:30), 행운(5:00), 화염저항(8:00), 화염저항(3:00), 느린낙하(4:00), 재생(1:30)" to player
+        message "<Bold> 재생2(22초), 즉시치유, 마법의 황금사과, 블레이즈 막대x3, 도약의 물약(8:00)" to player
+
+command /주황:
+    trigger:
+        message "<Bold><&6<Bold>주황&f<Bold>기계 확률>" to player
+        message "&5<Bold>날카로움IV&f<Bold> 책 상품만 포함된 기계입니다." to player

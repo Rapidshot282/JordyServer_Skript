@@ -1,0 +1,1169 @@
+options:
+    j : &6[&e시스템&6]&f
+
+variables:
+    {뉴비.%player%} = true
+    {기본템.%player%} = false
+    {자동심기.%player%} = false
+    
+
+on first join:
+    send title "&d죠르딩 서버에 처음 접속하셨군요!" with subtitle "&f자유, 경제, RPG made by 죠르딩" to player for 5 seconds
+    set join message to "%player% 님이 서버에 처음 접속 했습니다! 환영해주세요!"
+    set {뉴비.%player%} to true
+    set {직업.%player%} to "뉴비"
+
+on join:
+    send title "&d죠르딩 서버" with subtitle "자유, 경제, RPG made by 죠르딩" to player for 3 seconds
+    set join message to "Welcome back &e%player%!"
+    set {미끼} to ink sac named "&b미끼"
+    if {직업.%player%} is not set:
+        set {직업.%player%} to "뉴비"
+
+on quit:
+    set quit message to "See you later, &e%player%!"
+
+every 15 tick:
+    loop all players:
+        set {_l} to location of loop-player
+        set {_msg::x} to "x:%round x-coord of {_l}%"
+        set {_msg::y} to "y:%round y-coord of {_l}%"
+        set {_msg::z} to "z:%round z-coord of {_l}%"
+
+
+        if {scoreboard.%loop-player%} is true:
+            wipe loop-player's sidebar 
+            set name of sidebar of loop-player to "&9<Bold>%loop-player%"
+            set score "&5<Bold>직업 : %{직업.%loop-player%}% / %{레벨.%loop-player%}%" in sidebar of loop-player to 4
+            set score "&e<Bold>소지금 : %loop-player's money%G" in sidebar of loop-player to 3
+            set score "시간 : %now%" in sidebar of loop-player to 2   
+            set score "좌표 : %{_msg::*}%" in sidebar of loop-player to 1
+            set score "바이옴 : %loop-player's biome%" in sidebar of loop-player to 0
+        
+
+command /scoreboard [<string>]:
+    trigger:
+        if arg 1 is "on":
+            set {scoreboard.%player%} to true
+            message "{@j} 프로필 활성화 됨!"
+
+        if arg 1 is "off":
+            set {scoreboard.%player%} to false
+            message "{@j} 프로필 비활성화 됨! 활성화 하려면 &6/scoreboard on&f을 하세요"
+            wipe player's sidebar
+
+command /startitem:
+	trigger:
+		if {뉴비.%player%} is true:
+			give 1 iron pickaxe named "철 곡괭이" with lore "시작의 곡괭이" to player
+			give 1 iron sword named "철 칼" with lore "시작의 칼" to player
+			give 1 iron axe named "철 도끼" with lore "시작의 도끼" to player
+		else:
+			message "{@j}<Bold>당신은 이미 직업이 있지 않습니까?! 고인물이 그러시다니 정말 실망입니다!"
+
+command /전직관소환:
+	trigger:
+		if player is op:
+			execute op command "/npc create &6전직관"
+			wait 20 tick
+			execute op command "/npc skin %player%"
+			message "{@j} 전직관이 생성되었습니다."
+
+on rightclick on entity:
+    if entity's name is "&6전직관":
+        if lore of player's tool contains "&6전직서":
+            if name of player's tool contains "&e전직서":
+                open chest with 3 rows named "&e직업선택" to player
+                set slot 10 of current inventory of player to wheat named "&f농부" with lore "&f농부로 전직합니다."
+                set slot 11 of current inventory of player to diamond pickaxe named "&f광부" with lore "&f광부로 전직합니다."
+                set slot 12 of current inventory of player to fishing rod named "&f낚시꾼" with lore "&f낚시꾼으로 전직합니다."
+        else:
+            message "{@j} 전직서를 들고 전직관에게 말을 걸어주세요!" to player
+
+on inventory click:
+    if iname contains "&e직업선택":
+        if click type is left mouse button with shift:
+            cancel event
+        else:
+            if clicked raw slot is 10:
+                if {직업.%player%} is "뉴비":
+                    close player's inventory
+                    wait 1 tick
+                    remove 1 book named "&e전직서" with lore "&6전직서" from the player
+                    wait 1 tick
+                    set {직업.%player%} to "농부"
+                    set {자동심기.%player%} to true
+                    set {경험치.%player%} to 0
+                    set {레벨.%player%} to 1
+                    set {뉴비.%player%} to false
+                    send title "&b축하합니다!&f &a전직&f에 성공하셨습니다." with subtitle "직업 : &e%{직업.%player%}%" to player for 2 seconds
+            else if clicked raw slot is 11:
+                if {직업.%player%} is "뉴비":
+                    close player's inventory
+                    wait 1 tick
+                    remove 1 book named "&e전직서" with lore "&6전직서" from the player
+                    wait 1 tick
+                    set {직업.%player%} to "광부"
+                    set {경험치.%player%} to 0
+                    set {레벨.%player%} to 1
+                    set {뉴비.%player%} to false
+                    send title "&b축하합니다!&f &a전직&f에 성공하셨습니다." with subtitle "직업 : &e%{직업.%player%}%" to player for 2 seconds
+            else if clicked raw slot is 12:
+                if {직업.%player%} is "뉴비":
+                    close player's inventory
+                    wait 1 tick
+                    remove 1 book named "&e전직서" with lore "&6전직서" from the player
+                    wait 1 tick
+                    set {직업.%player%} to "낚시꾼"
+                    set {경험치.%player%} to "MAX"
+                    set {레벨.%player%} to 5
+                    set {뉴비.%player%} to false
+                    send title "&b축하합니다!&f &a전직&f에 성공하셨습니다." with subtitle "직업 : &e%{직업.%player%}%" to player for 2 seconds             
+
+command /직업경험치셋팅:
+    trigger:
+        if player is op:
+            set {최대경험치::0} to 0
+            set {최대경험치::1} to 6000
+            set {최대경험치::2} to 9000
+            set {최대경험치::3} to 15000
+            set {최대경험치::4} to 20000
+            set {최대경험치::5} to "MAX"
+            set {직업최대레벨} to 5
+            message "{@j}로드성공"
+
+every 10 tick:
+    loop all players:
+        level_reload(loop-player)
+
+function level_reload(p: player):
+    if {경험치.%{_p}%} >= {최대경험치::%{레벨.%{_p}%}%}:
+        if {레벨.%{_p}%} < {직업최대레벨}:
+            add 1 to {레벨.%{_p}%}
+            set {경험치.%{_p}%} to 0
+            message "&6-----------------------------------------" to {_p}
+            message "{@j} &a%{직업.%{_p}%}%의 &d레벨&f이 올랐습니다! (현재레벨 : %{레벨.%{_p}%}%)" to {_p}
+            message "&6-----------------------------------------" to {_p}
+        if {레벨.%{_p}%} = {직업최대레벨}:
+            set {경험치.%{_p}%} to "MAX"
+            if {만렙.%{_p}%} is not set:
+                send title "&b축하합니다!&f &a%{직업.%{_p}%}%&f의 레벨이 &e최대치&f에 도달하였습니다!" to {_p} for 2 seconds
+                set {만렙.%{_p}%} to 1
+
+command /전직서:
+    trigger:
+        if player is op:
+            give player 1 book named "&e전직서" with lore "&6전직서"
+            message "{@j} 전직서가 지급되었습니다"
+
+command /경험치주기 [<integer>] [<offlineplayer>]:
+    trigger:
+        if player is op:
+            if arg 1 is not set:
+                message "&6-----------------------------------------" to arg 2
+                message "{@j} &e경험치주기사용법 &f- &e/경험치주기 &a[지급할경험치] &b[유저닉네임]" to arg 2
+                message "&6-----------------------------------------" to arg 2
+            else:
+                if arg 2 is not set:
+                    message "{@j}지급할 &b플레이어 닉네임&f을 입력해주세요!" to arg 2
+                else:
+                    add arg 1 to {경험치.%arg 2%}
+                    message "{@j} &b%arg 2%&f님에게 &a경험치&f를 &a%arg 1%&f만큼 보냈습니다!" to arg 2
+                    message "{@j} &e관리자&f로부터 &a경험치&f를 &a%arg 1%&f만큼 지급받으셨습니다!" to arg 2
+
+command /직업:
+    trigger:
+        if {직업.%player%} is "뉴비":
+            send title "당신은 현재 직업을 가지고 있지 않습니다! 전직을 먼저 하세요!" to player for 2 seconds
+        else if {직업.%player%} is "농부":
+            message "&6--------------------------------------------" to player
+            message "{@j} [&4직업&e]&f:농부 &e[&d레벨&e]&f:%{레벨.%player%}% &e[&a경험치&e]&f:%{경험치.%player%}%/%{최대경험치::%{레벨.%player%}%}%" to player
+            message "&6--------------------------------------------" to player
+        else if {직업.%player%} is "광부":
+            message "&6--------------------------------------------" to player
+            message "{@j} [&4직업&e]&f:광부 &e[&d레벨&e]&f:%{레벨.%player%}% &e[&a경험치&e]&f:%{경험치.%player%}%/%{최대경험치::%{레벨.%player%}%}%" to player
+            message "&6--------------------------------------------" to player
+        else if {직업.%player%} is "낚시꾼":
+            message "&6--------------------------------------------" to player
+            message "{@j} [&4직업&e]&f:낚시꾼 &e[&d레벨&e]&f:낚시꾼은 최고레벨 고정입니다. &e[&a경험치&e]&f:%{경험치.%player%}%/%{최대경험치::%{레벨.%player%}%}%" to player
+            message "&6--------------------------------------------" to player
+
+on rightclick with paper:
+    if lore of player's tool contains "사용 시 &a직업&f이 초기화가 됩니다.":
+        if name of player's tool contains "&e직업초기화권":
+            set {직업.%player%} to "뉴비"
+            set {뉴비.%player%} to true
+            delete {만렙.%player%}
+            delete {경험치.%player%}
+            delete {레벨.%player%}
+            remove 1 paper named "&e직업초기화권" with lore "사용 시 &a직업&f이 초기화가 됩니다." from player
+            send title "&a직업&f을 &b초기화&f 했습니다!" to player for 2 seconds
+
+command /초기화권:
+    trigger:
+        if player is op:
+            give player 1 paper named "&e직업초기화권" with lore "사용 시 &a직업&f이 초기화가 됩니다."
+            message "{@j} 초기화권이 지급되었습니다." to player
+
+# 직업 특수효과(농부)
+on break of ripe wheat plant:
+    if {직업.%player%} is "농부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of wheat plant:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+                if {자동심기.%player%} is true:
+                    if player has wheat seeds:
+                        wait 8 tick
+                        remove 1 wheat seeds from player
+                        set block to wheat plant
+                    else:
+                        message "{@j} 자동심기를 사용하기에 &a씨앗&f이 부족합니다. &a인벤토리&f를 확인해주세요." to player
+            else:
+                cancel drops
+                wheat_farm(player)
+                message "{@j} &a밀&f을 &6직업효과&f로 추가 재배했습니다. &6(%{레벨.%player%}%)" to player
+                if {자동심기.%player%} is true:
+                    if player has wheat seeds:
+                        wait 8 tick
+                        remove 1 wheat seeds from player
+                        set block to wheat plant
+                    else:
+                        message "{@j} 자동심기를 사용하기에 &a씨앗&f이 부족합니다. &a인벤토리&f를 확인해주세요." to player
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+            if player doesn't have enough space for 1 of wheat plant:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+                if {자동심기.%player%} is true:
+                    if player has wheat seeds:
+                        wait 8 tick
+                        remove 1 wheat seeds from player
+                        set block to wheat plant
+                    else:
+                        message "{@j} 자동심기를 사용하기에 &a씨앗&f이 부족합니다. &a인벤토리&f를 확인해주세요." to player
+            else:
+                cancel drops
+                wheat_farm(player)
+                message "{@j} &a밀&f을 &6직업효과&f로 추가 재배했습니다. &6(%{레벨.%player%}%)" to player
+                if {자동심기.%player%} is true:
+                    if player has wheat seeds:
+                        wait 8 tick
+                        remove 1 wheat seeds from player
+                        set block to wheat plant
+                    else:
+                        message "{@j} 자동심기를 사용하기에 &a씨앗&f이 부족합니다. &a인벤토리&f를 확인해주세요." to player
+
+on break of ripe beetroot plant:
+    if {직업.%player%} is "농부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of beetroot:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+                if {자동심기.%player%} is true:
+                    if player has beetroot seeds:
+                        wait 8 tick
+                        remove 1 beetroot seeds from player
+                        set block to beetroot plant
+                    else:
+                        message "{@j} 자동심기를 사용하기에 &a씨앗&f이 부족합니다. &a인벤토리&f를 확인해주세요." to player
+            else:
+                cancel drops
+                beet_farm(player)
+                message "{@j} &a비트&f를 &6직업효과&f로 추가 재배했습니다. &6(%{레벨.%player%}%)" to player
+                if {자동심기.%player%} is true:
+                    if player has beetroot seeds:
+                        wait 8 tick
+                        remove 1 beetroot seeds from player
+                        set block to beetroot plant
+                    else:
+                        message "{@j} 자동심기를 사용하기에 &a씨앗&f이 부족합니다. &a인벤토리&f를 확인해주세요." to player
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+            if player doesn't have enough space for 1 of beetroot:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+                if {자동심기.%player%} is true:
+                    if player has beetroot seeds:
+                        wait 8 tick
+                        remove 1 beetroot seeds from player
+                        set block to beetroot plant
+                    else:
+                        message "{@j} 자동심기를 사용하기에 &a씨앗&f이 부족합니다. &a인벤토리&f를 확인해주세요." to player
+            else:
+                cancel drops
+                beet_farm(player)
+                message "{@j} &a비트&f를 &6직업효과&f로 추가 재배했습니다. &6(%{레벨.%player%}%)" to player
+                if {자동심기.%player%} is true:
+                    if player has beetroot seeds:
+                        wait 8 tick
+                        remove 1 beetroot seeds from player
+                        set block to beetroot plant
+                    else:
+                        message "{@j} 자동심기를 사용하기에 &a씨앗&f이 부족합니다. &a인벤토리&f를 확인해주세요." to player
+
+on break of brown mushroom:
+    if {직업.%player%} is "농부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of brown mushroom:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                brownm_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+            if player doesn't have enough space for 1 of brown mushroom:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                brownm_rand(player)
+
+on break of red mushroom:
+    if {직업.%player%} is "농부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of red mushroom:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                redm_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+            if player doesn't have enough space for 1 of red mushroom:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                redm_rand(player)
+
+on break of ripe cocoa plant:
+    if {직업.%player%} is "농부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of cocoa beans:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                cocoa_farm(player)
+                message "{@j} &a코코아 콩&f을 &6직업효과&f로 추가 재배했습니다. &6(%{레벨.%player%}%)" to player
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 5 상승했습니다." to player
+            add 5 to {경험치.%player%}
+            if player doesn't have enough space for 1 of cocoa beans:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                cocoa_farm(player)
+                message "{@j} &a코코아 콩&f을 &6직업효과&f로 추가 재배했습니다. &6(%{레벨.%player%}%)" to player
+
+on break of ripe carrot plant:
+    if {직업.%player%} is "농부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+
+on break of sugar cane:
+    if {직업.%player%} is "농부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 5 상승했습니다." to player
+            add 5 to {경험치.%player%}
+
+#on break:
+    #if player is op:
+        #send "%event-block%"
+                
+function cocoa_farm(p: player):
+    if {레벨.%{_p}%} is 1:
+        give {_p} 3 cocoa beans
+    else if {레벨.%{_p}%} is 2:
+        give {_p} 4 cocoa beans
+    else if {레벨.%{_p}%} is 3:
+        give {_p} 5 cocoa beans
+    else if {레벨.%{_p}%} is 4:
+        give {_p} 6 cocoa beans
+    else if {레벨.%{_p}%} is 5:
+        give {_p} 7 cocoa beans
+
+function wheat_farm(p: player):
+    if {레벨.%{_p}%} is 1:
+        give {_p} 2 wheat plant
+    else if {레벨.%{_p}%} is 2:
+        give {_p} 3 wheat plant
+    else if {레벨.%{_p}%} is 3:
+        give {_p} 4 wheat plant
+    else if {레벨.%{_p}%} is 4:
+        give {_p} 5 wheat plant
+    else if {레벨.%{_p}%} is 5:
+        give {_p} 6 wheat plant
+
+function beet_farm(p: player):
+    if {레벨.%{_p}%} is 1:
+        give {_p} 2 beetroot
+    else if {레벨.%{_p}%} is 2:
+        give {_p} 3 beetroot
+    else if {레벨.%{_p}%} is 3:
+        give {_p} 4 beetroot
+    else if {레벨.%{_p}%} is 4:
+        give {_p} 5 beetroot
+    else if {레벨.%{_p}%} is 5:
+        give {_p} 6 beetroot
+
+function pumpkin_farm(p: player):
+    if {레벨.%{_p}%} is 1:
+        give {_p} 2 pumpkin
+    else if {레벨.%{_p}%} is 2:
+        give {_p} 3 pumpkin
+    else if {레벨.%{_p}%} is 3:
+        give {_p} 4 pumpkin
+    else if {레벨.%{_p}%} is 4:
+        give {_p} 5 pumpkin
+    else if {레벨.%{_p}%} is 5:
+        give {_p} 6 pumpkin
+
+function brownm_rand(p: player):
+    set {_rand} to random integer between 1 and 100
+    if {레벨.%{_p}%} is 1:
+        if {_rand} is between 1 and 70:
+            give {_p} 2 brown mushroom
+            message "{@j} &6직업효과&f로 &a갈색 버섯&f을 추가 획득하였습니다. &6(1)" to {_p}
+        else if {_rand} is between 71 and 90:
+            give {_p} 3 brown mushroom
+            message "{@j} &6직업효과&f로 &a갈색 버섯&f을 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 91 and 100:
+            give {_p} 4 brown mushroom
+            message "{@j} &6직업효과&f로 &a갈색 버섯&f을 추가 획득하였습니다. &6(3)" to {_p}
+    else if {레벨.%{_p}%} is 3:
+        if {_rand} is between 1 and 70:
+            give {_p} 3 brown mushroom
+            message "{@j} &6직업효과&f로 &a갈색 버섯&f을 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 71 and 90:
+            give {_p} 4 brown mushroom
+            message "{@j} &6직업효과&f로 &a갈색 버섯&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 91 and 100:
+            give {_p} 5 brown mushroom
+            message "{@j} &6직업효과&f로 &a갈색 버섯&f을 추가 획득하였습니다. &6(4)" to {_p}
+    else if {레벨.%{_p}%} is 5:
+        if {_rand} is between 1 and 70:
+            give {_p} 4 brown mushroom
+            message "{@j} &6직업효과&f로 &a갈색 버섯&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 71 and 90:
+            give {_p} 5 brown mushroom
+            message "{@j} &6직업효과&f로 &a갈색 버섯&f을 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 91 and 100:
+            give {_p} 6 brown mushroom
+            message "{@j} &6직업효과&f로 &a갈색 버섯&f을 추가 획득하였습니다. &6(5)" to {_p}
+
+function redm_rand(p: player):
+    set {_rand} to random integer between 1 and 100
+    if {레벨.%{_p}%} is 1:
+        if {_rand} is between 1 and 70:
+            give {_p} 2 red mushroom
+            message "{@j} &6직업효과&f로 &a빨간 버섯&f을 추가 획득하였습니다. &6(1)" to {_p}
+        else if {_rand} is between 71 and 90:
+            give {_p} 3 red mushroom
+            message "{@j} &6직업효과&f로 &a빨간 버섯&f을 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 91 and 100:
+            give {_p} 4 red mushroom
+            message "{@j} &6직업효과&f로 &a빨간 버섯&f을 추가 획득하였습니다. &6(3)" to {_p}
+    else if {레벨.%{_p}%} is 3:
+        if {_rand} is between 1 and 70:
+            give {_p} 3 red mushroom
+            message "{@j} &6직업효과&f로 &a빨간 버섯&f을 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 71 and 90:
+            give {_p} 4 red mushroom
+            message "{@j} &6직업효과&f로 &a빨간 버섯&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 91 and 100:
+            give {_p} 5 red mushroom
+            message "{@j} &6직업효과&f로 &a빨간 버섯&f을 추가 획득하였습니다. &6(4)" to {_p}
+    else if {레벨.%{_p}%} is 5:
+        if {_rand} is between 1 and 70:
+            give {_p} 4 red mushroom
+            message "{@j} &6직업효과&f로 &a빨간 버섯&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 71 and 90:
+            give {_p} 5 red mushroom
+            message "{@j} &6직업효과&f로 &a빨간 버섯&f을 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 91 and 100:
+            give {_p} 6 red mushroom
+            message "{@j} &6직업효과&f로 &a빨간 버섯&f을 추가 획득하였습니다. &6(5)" to {_p}
+
+#직업 특수효과(광부)
+on break of iron ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of raw iron:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                iron_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+            if player doesn't have enough space for 1 of raw iron:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                iron_rand(player)
+
+on break of deepslate iron ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of raw iron:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                iron_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+            if player doesn't have enough space for 1 of raw iron:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                iron_rand(player)
+
+on break of gold ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of raw gold:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                gold_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+            if player doesn't have enough space for 1 of raw gold:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                gold_rand(player)
+
+on break of deepslate gold ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of raw gold:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                gold_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+            if player doesn't have enough space for 1 of raw gold:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                gold_rand(player)
+
+on break of diamond ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of diamond:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                diamond_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 5 상승했습니다." to player
+            add 5 to {경험치.%player%}
+            if player doesn't have enough space for 1 of diamond:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                diamond_rand(player)
+
+on break of deepslate diamond ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of diamond:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                diamond_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 5 상승했습니다." to player
+            add 5 to {경험치.%player%}
+            if player doesn't have enough space for 1 of diamond:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                diamond_rand(player)
+
+on break of emerald ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of emerald:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                emerald_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 10 상승했습니다." to player
+            add 10 to {경험치.%player%}
+            if player doesn't have enough space for 1 of emerald:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                emerald_rand(player)
+
+on break of deepslate emerald ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of emerald:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                emerald_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 10 상승했습니다." to player
+            add 10 to {경험치.%player%}
+            if player doesn't have enough space for 1 of emerald:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                emerald_rand(player)
+
+on break of redstone ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+
+on break of deepslate redstone ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+
+on break of lapis lazuli ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+
+on break of deepslate lapis lazuli ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 3 상승했습니다." to player
+            add 3 to {경험치.%player%}
+
+on break of copper ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 2 상승했습니다." to player
+            add 2 to {경험치.%player%}
+
+on break of deepslate copper ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 2 상승했습니다." to player
+            add 2 to {경험치.%player%}
+
+on break of coal ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 1 상승했습니다." to player
+            add 1 to {경험치.%player%}
+
+on break of deepslate coal ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 1 상승했습니다." to player
+            add 1 to {경험치.%player%}
+
+on break of nether gold ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 5 상승했습니다." to player
+            add 5 to {경험치.%player%}
+
+on break of nether quartz ore:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 10 상승했습니다." to player
+            add 10 to {경험치.%player%}
+
+on break of ancient debris:
+    if {직업.%player%} is "광부":
+        if {레벨.%player%} = {직업최대레벨}:
+            message "{@j} 직업 최대레벨에 도달하여 경험치를 얻지 못하였습니다."
+            if player doesn't have enough space for 1 of ancient debris:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                netherite_rand(player)
+        if {레벨.%player%} < {직업최대레벨}:
+            message "{@j} &a경험치&f가 30 상승했습니다." to player
+            add 30 to {경험치.%player%}
+            if player doesn't have enough space for 1 of ancient debris:
+                message "{@j} &c<Bold>주의!&f<Bold> 인벤토리가 가득 차서 &b<Bold>추가효과&f<Bold>가 발동되지 않았습니다. 인벤토리를 비워주세요!"
+            else:
+                cancel drops
+                netherite_rand(player)
+
+function iron_rand(p: player):
+    set {_rand} to random integer between 1 and 100
+    if {레벨.%{_p}%} is 1:
+        if {_rand} is between 1 and 50:
+            give {_p} 3 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 4 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 5 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(4)" to {_p}
+    else if {레벨.%{_p}%} is 2:
+        if {_rand} is between 1 and 50:
+            give {_p} 3 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 4 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 5 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(4)" to {_p}
+    else if {레벨.%{_p}%} is 3:
+        if {_rand} is between 1 and 50:
+            give {_p} 4 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 5 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 6 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(5)" to {_p}
+    else if {레벨.%{_p}%} is 4:
+        if {_rand} is between 1 and 50:
+            give {_p} 4 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 5 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 6 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(5)" to {_p}
+    else if {레벨.%{_p}%} is 5:
+        if {_rand} is between 1 and 50:
+            give {_p} 5 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 6 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(5)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 7 raw iron
+            message "{@j} &6직업효과&f로 &a철 원석&f을 추가 획득하였습니다. &6(6)" to {_p}
+
+function gold_rand(p: player):
+    set {_rand} to random integer between 1 and 100
+    if {레벨.%{_p}%} is 1:
+        if {_rand} is between 1 and 50:
+            give {_p} 3 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 4 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 5 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(4)" to {_p}
+    else if {레벨.%{_p}%} is 2:
+        if {_rand} is between 1 and 50:
+            give {_p} 3 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 4 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 5 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(4)" to {_p}
+    else if {레벨.%{_p}%} is 3:
+        if {_rand} is between 1 and 50:
+            give {_p} 4 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 5 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 6 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(5)" to {_p}
+    else if {레벨.%{_p}%} is 4:
+        if {_rand} is between 1 and 50:
+            give {_p} 4 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 5 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 6 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(5)" to {_p}
+    else if {레벨.%{_p}%} is 5:
+        if {_rand} is between 1 and 50:
+            give {_p} 5 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 6 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(5)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 7 raw gold
+            message "{@j} &6직업효과&f로 &a금 원석&f을 추가 획득하였습니다. &6(6)" to {_p}
+
+function diamond_rand(p: player):
+    set {_rand} to random integer between 1 and 100
+    if {레벨.%{_p}%} is 1:
+        if {_rand} is between 1 and 50:
+            give {_p} 3 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 4 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 5 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(4)" to {_p}
+    else if {레벨.%{_p}%} is 2:
+        if {_rand} is between 1 and 50:
+            give {_p} 3 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 4 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 5 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(4)" to {_p}
+    else if {레벨.%{_p}%} is 3:
+        if {_rand} is between 1 and 50:
+            give {_p} 4 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 5 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 6 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(5)" to {_p}
+    else if {레벨.%{_p}%} is 4:
+        if {_rand} is between 1 and 50:
+            give {_p} 4 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 5 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 6 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(5)" to {_p}
+    else if {레벨.%{_p}%} is 5:
+        if {_rand} is between 1 and 50:
+            give {_p} 5 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 6 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(5)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 7 diamond
+            message "{@j} &6직업효과&f로 &a다이아몬드&f를 추가 획득하였습니다. &6(6)" to {_p}
+
+function emerald_rand(p: player):
+    set {_rand} to random integer between 1 and 100
+    if {레벨.%{_p}%} is 1:
+        if {_rand} is between 1 and 50:
+            give {_p} 3 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 4 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 5 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(4)" to {_p}
+    else if {레벨.%{_p}%} is 2:
+        if {_rand} is between 1 and 50:
+            give {_p} 3 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(2)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 4 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 5 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(4)" to {_p}
+    else if {레벨.%{_p}%} is 3:
+        if {_rand} is between 1 and 50:
+            give {_p} 4 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 5 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 6 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(5)" to {_p}
+    else if {레벨.%{_p}%} is 4:
+        if {_rand} is between 1 and 50:
+            give {_p} 4 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(3)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 5 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 6 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(5)" to {_p}
+    else if {레벨.%{_p}%} is 5:
+        if {_rand} is between 1 and 50:
+            give {_p} 5 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(4)" to {_p}
+        else if {_rand} is between 51 and 80:
+            give {_p} 6 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(5)" to {_p}
+        else if {_rand} is between 81 and 100:
+            give {_p} 7 emerald
+            message "{@j} &6직업효과&f로 &a에메랄드&f를 추가 획득하였습니다. &6(6)" to {_p}
+
+function netherite_rand(p: player):
+    set {_rand} to random integer between 1 and 100
+    if {레벨.%{_p}%} is 1:
+        if {_rand} is between 1 and 100:
+            give {_p} 2 ancient debris
+            message "{@j} &6직업효과&f로 &a고대의 잔해&f를 추가 획득하였습니다. &6(1)" to {_p}
+    else if {레벨.%{_p}%} is 2:
+        if {_rand} is between 1 and 100:
+            give {_p} 2 ancient debris
+            message "{@j} &6직업효과&f로 &a고대의 잔해&f를 추가 획득하였습니다. &6(1)" to {_p}
+    else if {레벨.%{_p}%} is 3:
+        if {_rand} is between 1 and 100:
+            give {_p} 2 ancient debris
+            message "{@j} &6직업효과&f로 &a고대의 잔해&f를 추가 획득하였습니다. &6(1)" to {_p}
+    else if {레벨.%{_p}%} is 4:
+        if {_rand} is between 1 and 100:
+            give {_p} 2 ancient debris
+            message "{@j} &6직업효과&f로 &a고대의 잔해&f를 추가 획득하였습니다. &6(1)" to {_p}
+    else if {레벨.%{_p}%} is 5:
+        if {_rand} is between 1 and 60:
+            give {_p} 2 ancient debris
+            message "{@j} &6직업효과&f로 &a고대의 잔해&f를 추가 획득하였습니다. &6(1)" to {_p}
+        else if {_rand} is between 61 and 100:
+            give {_p} 3 ancient debris
+            message "{@j} &6직업효과&f로 &a고대의 잔해&f를 추가 획득하였습니다. &6(2)" to {_p}
+
+#낚시 직업 기능추가
+on fishing:
+    if {직업.%player%} is "낚시꾼":
+        if fishing state is CAUGHT_FISH:
+            cancel event
+            if number of {미끼} in the player's inventory < 1:
+                chance of 80%:  #미끼가 없을 경우 낚시 실패 확률
+                    send title "&c실패" with subtitle "&f미끼가 없어서 물고기가 도망갔어요!" to player for 1.5 seconds
+                    exit
+            remove 1 of {미끼} from player
+            set {%player%.fishing} to 1
+            set {%player%.difficulty} to random integer between 4 and 7
+            set {%player%.seconds} to 3.5
+            set {_ln} to 1
+            loop 7 times:
+                if {_ln} <= {%player%.difficulty}:
+                    chance of 50%:
+                        set {%player%.fishing.way%{_ln}%} to "L"
+                    else:
+                        set {%player%.fishing.way%{_ln}%} to "R"
+                if {_ln} > {%player%.difficulty}:
+                    set {%player%.fishing.way%{_ln}%} to "&f"
+                add 1 to {_ln}
+            set {%player%.fishing.level} to 1
+            send title "&f%{%player%.fishing.way1}%%{%player%.fishing.way2}%%{%player%.fishing.way3}%%{%player%.fishing.way4}%%{%player%.fishing.way5}%%{%player%.fishing.way6}%%{%player%.fishing.way7}%" with subtitle "&7남은 시간 : 5 초..." to player for 1 seconds
+
+on fishing:
+    if {직업.%player%} is "낚시꾼":
+        if {%player%.fishing} is 1:
+            cancel event
+
+on fishing:
+    if fishing state is BITE:
+        if {직업.%player%} is "뉴비" or "광부" or "농부":
+            cancel event
+
+on tool change:
+	if {%player%.fishing} is set:
+		delete {%player%.fishing}
+		delete {%player%.difficulty}
+		delete {%player%.fishing.level}
+		set {%player%.seconds} to 0
+		send title "&c실패" with subtitle "&f물고기를 놓쳤어요." to player for 1.5 seconds
+		
+on break:
+	if {%player%.fishing} is 1:
+		cancel event
+		
+on rightclick:
+	if type of player's tool is Fishing Rod:
+		if clicked block is not set:
+			set {%player%.ls} to 1
+			wait 0.05 seconds
+			delete {%player%.ls}
+		
+command /미끼:
+	trigger:
+		if player is op:
+			give 1 of {미끼} to player
+		
+command /물고기:
+	trigger:
+		if player is op:
+			open chest with 1 row named "물고기 목록" to player
+			set slot 1 of current inventory of player to raw cod
+			set slot 2 of current inventory of player to pufferfish
+			set slot 3 of current inventory of player to raw salmon
+			set slot 5 of current inventory of player to tropical fish
+			set slot 6 of current inventory of player to nautilus shell
+		
+on rightclick:
+	if type of player's tool is Fishing Rod:
+		if {%player%.fishing} is set:
+			cancel event
+			if {%player%.fishing.way%{%player%.fishing.level}%} is "L":
+				delete {%player%.fishing}
+				delete {%player%.fishing.level}
+				delete {%player%.difficulty}
+				set {%player%.seconds} to 0
+				send title "&c실패" with subtitle "&f물고기를 놓쳤어요." to player for 1.5 seconds
+				exit
+			if {%player%.fishing.way%{%player%.fishing.level}%} is "R":
+				if {%player%.fishing.level} is {%player%.difficulty}:
+					delete {%player%.fishing}
+					delete {%player%.fishing.level}
+					set {%player%.seconds} to 0
+					send title "&b낚시 성공!" with subtitle "&7인벤토리에서 낚인 물고기를 확인하세요!" to player for 1 seconds
+					set {_chance} to random integer between 1 and 1000
+					if {%player%.difficulty} is 4:
+						if {_chance} is between 1 and 600:
+							give 2 of raw cod to player
+						if {_chance} is between 601 and 1000:
+							give 1 of pufferfish to player        
+					if {%player%.difficulty} is 5:
+						if {_chance} is between 1 and 600:
+							give 3 of raw cod to player
+						if {_chance} is between 601 and 900:
+							give 2 of pufferfish to player
+						if {_chance} is between 901 and 1000:
+							give 1 of raw salmon to player
+					if {%player%.difficulty} is 6:
+						if {_chance} is between 1 and 400:
+							give 4 of raw cod to player
+						if {_chance} is between 401 and 700:
+							give 3 of pufferfish to player
+						if {_chance} is between 701 and 900:
+							give 2 of raw salmon to player
+						if {_chance} is between 901 and 1000:
+							give 1 of tropical fish to player
+					if {%player%.difficulty} is 7:
+						if {_chance} is between 1 and 400:
+							give 4 of pufferfish to player
+						if {_chance} is between 401 and 700:
+							give 3 of raw salmon to player
+						if {_chance} is between 701 and 900:
+							give 2 of tropical fish to player
+						if {_chance} is between 901 and 1000:
+							give 1 of nautilus shell to player
+					delete {%player%.difficulty}
+					exit
+				set {%player%.fishing.way%{%player%.fishing.level}%} to "&aR&f"
+				add 1 to {%player%.fishing.level}
+				send title "&f%{%player%.fishing.way1}%%{%player%.fishing.way2}%%{%player%.fishing.way3}%%{%player%.fishing.way4}%%{%player%.fishing.way5}%%{%player%.fishing.way6}%%{%player%.fishing.way7}%" with subtitle "&7남은 시간 : %{%player%.seconds}% 초..." to player for 1 seconds
+					
+on leftclick:
+	if type of player's tool is Fishing Rod:
+		if {%player%.fishing} is set:
+			if clicked block is not set:
+				if {%player%.ls} is set:
+					delete {%player%.ls}
+					cancel event
+					exit
+			cancel event
+			if {%player%.fishing.way%{%player%.fishing.level}%} is "R":
+				delete {%player%.fishing}
+				delete {%player%.fishing.level}
+				delete {%player%.difficulty}
+				set {%player%.seconds} to 0
+				send title "&c실패" with subtitle "&f물고기를 놓쳤어요." to player for 1.5 seconds
+				exit
+			if {%player%.fishing.way%{%player%.fishing.level}%} is "L":
+				if {%player%.fishing.level} is {%player%.difficulty}:
+					delete {%player%.fishing}
+					delete {%player%.fishing.level}
+					set {%player%.seconds} to 0
+					send title "&b낚시 성공!" with subtitle "&7인벤토리에서 낚인 물고기를 확인하세요!" to player for 1.5 seconds
+					set {_chance} to random integer between 1 and 1000
+					if {%player%.difficulty} is 4:
+						if {_chance} is between 1 and 600:
+							give 2 of raw cod to player
+						if {_chance} is between 601 and 1000:
+							give 1 of pufferfish to player        
+					if {%player%.difficulty} is 5:
+						if {_chance} is between 1 and 600:
+							give 3 of raw cod to player
+						if {_chance} is between 601 and 900:
+							give 2 of pufferfish to player
+						if {_chance} is between 901 and 1000:
+							give 1 of raw salmon to player
+					if {%player%.difficulty} is 6:
+						if {_chance} is between 1 and 400:
+							give 4 of raw cod to player
+						if {_chance} is between 401 and 700:
+							give 3 of pufferfish to player
+						if {_chance} is between 701 and 900:
+							give 2 of raw salmon to player
+						if {_chance} is between 901 and 1000:
+							give 1 of tropical fish to player
+					if {%player%.difficulty} is 7:
+						if {_chance} is between 1 and 400:
+							give 4 of pufferfish to player
+						if {_chance} is between 401 and 700:
+							give 3 of raw salmon to player
+						if {_chance} is between 701 and 900:
+							give 2 of tropical fish to player
+						if {_chance} is between 901 and 1000:
+							give 1 of nautilus shell to player
+					delete {%player%.difficulty}
+					exit
+				set {%player%.fishing.way%{%player%.fishing.level}%} to "&aL&f"
+				add 1 to {%player%.fishing.level}
+				send title "&f%{%player%.fishing.way1}%%{%player%.fishing.way2}%%{%player%.fishing.way3}%%{%player%.fishing.way4}%%{%player%.fishing.way5}%%{%player%.fishing.way6}%%{%player%.fishing.way7}%" with subtitle "&7남은 시간 : %{%player%.seconds}% 초..." to player for 1 seconds
+every 1 seconds:
+	loop all players:
+		if {%loop-player%.seconds} > 0:
+			remove 1 from {%loop-player%.seconds}
+			if {%loop-player%.seconds} is 0:
+				if {%loop-player%.fishing} is set:
+					delete {%loop-player%.fishing}
+					delete {%loop-player%.difficulty}
+					delete {%loop-player%.fishing.level}
+					send title "&c실패" with subtitle "&f물고기가 도망갔어요." to loop-player for 1.5 seconds
+			else:
+				send title "&f%{%loop-player%.fishing.way1}%%{%loop-player%.fishing.way2}%%{%loop-player%.fishing.way3}%%{%loop-player%.fishing.way4}%%{%loop-player%.fishing.way5}%%{%loop-player%.fishing.way6}%%{%loop-player%.fishing.way7}%" with subtitle "&7남은 시간 : %{%loop-player%.seconds}% 초..." to loop-player for 1 seconds

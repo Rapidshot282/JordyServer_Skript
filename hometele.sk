@@ -1,0 +1,22 @@
+options:
+    j : &6[&e시스템&6]&f
+
+on right click with paper:
+    if lore of player's tool contains "&6우클릭 시 사용":
+        if name of player's tool contains "&e마을귀환서":
+            message "{@j} &e마을귀환서&f를 사용하였습니다!" to player
+            remove 1 paper named "&e마을귀환서" with lore "&6우클릭 시 사용" from player
+            send title "&d3초 뒤에 마을로 이동!" to player for 1 seconds
+            wait 1 seconds
+            send title "&d2초 뒤에 마을로 이동!" to player for 1 seconds
+            wait 1 seconds
+            send title "&d1초 뒤에 마을로 이동!" to player for 1 seconds
+            wait 1 seconds
+            send title "&d마을로 이동 완료!" to player for 1 seconds
+            teleport player to location(1918,71,842)
+
+command /귀환서:
+    trigger:
+        if player is op:
+            give player 1 paper named "&e마을귀환서" with lore "&6우클릭 시 사용"
+            message "귀환서 1개가 지급되었습니다"

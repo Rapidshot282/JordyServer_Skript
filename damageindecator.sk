@@ -1,0 +1,6 @@
+﻿on damage:
+	wait 1 tick
+	set {_체력} to victim's health
+	set {_맥스체력} to victim's max health
+	send action bar "&c%victim%&f의 남은 체력 - &c[ &f%{_체력}*2%/%{_맥스체력}*2% &c]" to attacker
+	wait 1 tick

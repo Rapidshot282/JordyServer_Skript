@@ -1,0 +1,8 @@
+options:
+    j : &6[&4<Bold>주의&6]&f
+    c : &6[&e시스템&6]&f
+
+on rightclick: 
+    if item is milk bucket:
+        message "{@j} <Bold>우유를 먹어도 &e<Bold>상태이상&f<Bold>을 지울 수 없습니다."
+        cancel event
