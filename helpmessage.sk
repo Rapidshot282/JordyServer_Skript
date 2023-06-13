@@ -66,7 +66,7 @@ command /강화방법:
         message "&e<Bold>장인&f<Bold>에게 우클릭 후 강화할 장비를 올려두고 중앙에 있는 &2<Bold>엔더의 눈&f<Bold>을 클릭하세요." to player
         message "<Bold>그 다음 중앙에 &b<Bold>1회 분&f<Bold>의 강화재료를 올려둡니다. &4<Bold>일괄로 올리시면 진행되지 않습니다." to player
         message "<Bold>강화재료를 올린 뒤 &2<Bold>엔더의 눈&f<Bold>을 클릭하면 결과가 &e<Bold>채팅창&f<Bold>에 출력됩니다." to player
-        message "<Bold>강화확률은 모든 구간 &e<Bold>25&f<Bold>퍼센트입니다. 그리고 최대강화수치는 &e<Bold>+10&f<Bold>입니다." to player
+        message "<Bold>강화확률은 모든 구간 &e<Bold>20&f<Bold>퍼센트입니다. 그리고 최대강화수치는 &e<Bold>+10&f<Bold>입니다." to player
 
 command /기반암:
     trigger:
@@ -158,7 +158,7 @@ command /핑크상품:
         message "<Bold>1티어 => 수선, 겉날개, 설커상자" to player
         message "<Bold>2티어 => 네더라이트 파편, 가벼운착지" to player
         message "<Bold>3티어 => 불사의 토템, 신속한 잠행, 효율, 날카로움, 약탈, 무한, 섬세한 손길" to player
-        message "<Bold>행운, 바다의 행운, 화염, 보호, 내구성, 힘" to player
+        message "<Bold>행운, 화염, 보호, 내구성, 힘" to player
         message "<Bold>4티어 => 경험치병x64" to player
 
 command /청록:

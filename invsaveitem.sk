@@ -1,0 +1,20 @@
+on death of player:
+	set {_inv} to victim's inventory
+	set {_item} to paper named "&6&l인벤 세이브 권&r" with lore "&d&l사망 시 인벤토리를 1회 보호"
+	if {_inv} contains {_item}:
+		remove 1 of {_item} from victim
+		keep inventory
+		keep experience
+		clear drops
+		stop
+
+command /인벤세이브권 [<number>]:
+	permission: *.*
+	trigger:
+		if arg-1 is not set:
+			message "&c/인벤세이브권 <수량>" to player
+			stop
+		if arg-1 is set:
+			set {_item} to paper named "&6&l인벤 세이브 권&r" with lore "&d&l사망 시 인벤토리를 1회 보호"
+			give arg 1 of {_item} to player
+			stop

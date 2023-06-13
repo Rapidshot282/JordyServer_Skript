@@ -127,7 +127,7 @@ on inventory click:
                                 set {_공격st} to uncolored {강화::%player%::아이템::로어::%loop-index%}
                                 replace all " " and "-" and "공격" with "" in {_공격st}
                                 set {_공격st} to {_공격st} parsed as number
-                                chance of 25%:
+                                chance of 20%:
                                     add 1 to {_체력스텟}
                                     add 1 to {_방어력스텟}
                                     add 1 to {_공격st}
